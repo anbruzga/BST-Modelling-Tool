@@ -1,5 +1,5 @@
 # BST-Modelling-Tool
-Create, visualise and modify binary search tree.
+Create and modify binary search tree, visualise the changes step by step
 
 
 ## Installation:
