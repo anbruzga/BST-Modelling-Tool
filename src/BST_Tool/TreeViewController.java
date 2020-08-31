@@ -36,6 +36,12 @@ public class TreeViewController {
     private JButton deleteAllNodesButton;
     private JButton fontSmallerBtn;
     private JButton fontLargerBtn;
+    private JButton transitionFastBackwardBtn;
+    private JButton transitionFastForwardBtn;
+    private JTextField nodesAmountTextField;
+    private JTextField minValueTextField;
+    private JTextField maxValueTextField;
+    private JLabel transitionNameLabel;
 
     private BinarySearchTree tree = new BinarySearchTree();
     private static int originalDiagramFontSize;
@@ -70,7 +76,12 @@ public class TreeViewController {
 
         randTreeBtn.addActionListener(e -> {
             Transitions.clear();
-            tree = createRandomBST();
+            try{
+                tree = createRandomBST();
+            }
+            catch(NumberFormatException ex){
+                displayNumberFormatException();
+            }
             updateDiagram();
         });
 
@@ -79,10 +90,12 @@ public class TreeViewController {
             updateDiagram();
         });
 
+        /* Deleted button
         printTreeBtn.addActionListener(e -> {
             updateDiagram();
             Transitions.visitLast();
         });
+        */
 
         inorderBtn.addActionListener(e -> {
             tree.getInOrder();
@@ -265,39 +278,58 @@ public class TreeViewController {
 
 
     // this method quickly creates a random BST.
-    // It could ask the user input for numbers used, though I left it like it is,
-    // because it gives more speed in testing and playing with the program.
-    private BinarySearchTree createRandomBST() {
+    // It could ask the user input for numbers used, though I sometimes use it for manual testing
+    private BinarySearchTree createRandomBST() throws NumberFormatException {
 
         BinarySearchTree randTree = new BinarySearchTree();
-/*
-        // 1. Limit: Nodes Amount
-        final int nodesMinAmount = 5;
-        final int nodesMaxAmount = 20 + nodesMinAmount;
-        // from 5 to 25
-        int randNodesAmount = (int) (Math.random() * nodesMaxAmount + nodesMinAmount);
+
+        int nodesMinAmountDefault = 5;
+        int nodesMaxAmountDefault = 20 + nodesMinAmountDefault;
+        int nodesAmount = (int) (Math.random() * nodesMaxAmountDefault + nodesMinAmountDefault);
+        if (!nodesAmountTextField.getText().isEmpty())
+        {
+            String nodesAmountStr = nodesAmountTextField.getText();
+            if (isInteger(nodesAmountStr)){
+                nodesAmount = Integer.parseInt(nodesAmountStr);
+            }
+            else {
+                displayNotIntErrorMsg();
+                return null;
+            }
+        }
+
+
+        int maxValue = 50;
+        if (!maxValueTextField.getText().isEmpty())
+        {
+            String nodesAmountStr = maxValueTextField.getText();
+            if (isInteger(nodesAmountStr)){
+                maxValue = Integer.parseInt(nodesAmountStr);
+            }
+            else {
+                displayNotIntErrorMsg();
+                return null;
+            }
+        }
+
+        int minValue = -50;
+        if (!minValueTextField.getText().isEmpty())
+        {
+            String nodesAmountStr = minValueTextField.getText();
+            if (isInteger(nodesAmountStr)){
+                minValue = Integer.parseInt(nodesAmountStr);
+            }
+            else {
+                displayNotIntErrorMsg();
+                return null;
+            }
+        }
 
         // 2. Limit: Nodes Values
-        for (int i = 0; i < randNodesAmount; i++) {
+        for (int i = 0; i < nodesAmount; i++) {
             // from -50 to 50
-            int randNodeVal = (int) (Math.random() * 100 - 50);
-            randTree.addNode(randNodeVal);
-        }
-*/
-/*
-        randTree.addNode(6);
-        randTree.addNode(2);
-        randTree.addNode(1);
-        randTree.addNode(4);
-        randTree.addNode(3);
-        randTree.addNode(5);
-        randTree.addNode(7);
-        randTree.addNode(9);
-        randTree.addNode(8);
-*/
-
-        for (int i = 1; i <= 10; i++) {
-           randTree.addNode(i, true);
+            int randNodeVal = (int) (Math.random() * ((maxValue - minValue) + 1)) + minValue;
+            randTree.addNode(randNodeVal, true);
         }
 
         return randTree;
@@ -390,6 +422,10 @@ public class TreeViewController {
         catch(Exception e){
 
         }
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 
     private class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter{

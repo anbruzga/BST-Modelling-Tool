@@ -1,8 +1,6 @@
 package BST_Tool;
 
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +9,15 @@ public class BinarySearchTree {
 
     // VARIABLES
     private BSTNode root;
+    public final String ADDING = "Adding Node";
+    public final String DELETING = "Deleting Node";
+    public final String FINDING = "Finding Node";
+    public final String FINDING_MIN = "Finding Min";
+    public final String FINDING_MAX = "Finding Max";
+    public final String INORDER = "Inorder Traversal";
+    public final String PREORDER = "Preorder Traversal";
+    public final String POSTORDER = "Postorder Traversal";
+    public final String BALANCING = "Balancing";
 
     // CONSTRUCTORS
     public BinarySearchTree(int rootVal){
@@ -24,7 +31,7 @@ public class BinarySearchTree {
     public void addNode(int value, boolean doTransitions) {
         root = addRecursive(root, value, doTransitions);
         if (doTransitions) {
-            addTransition();
+            addTransition(TransitionNames.);
             traverseAll(root, true, true);
         }
     }
@@ -471,10 +478,10 @@ public class BinarySearchTree {
         return current;
     }
 
-    private void addTransition(){
+    private void addTransition(String name){
         TreeString ts = new TreeString();
         String diagram = ts.solve();
-        Transitions.add(diagram);
+        Transitions.add(diagram, name);
     }
 
 

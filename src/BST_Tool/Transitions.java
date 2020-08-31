@@ -9,10 +9,11 @@ public class Transitions {
     private static List<String> transitions = new LinkedList<>();
     private static List<Boolean[]> stackedNodes = new LinkedList<>();
     private static List<Boolean[]> markedNodes = new LinkedList<>();
+    private static List<String> transitionNames = new LinkedList<>();
 
     private static int lastVisited = 0;
 
-    public static void add(String s){
+    public static void add(String s, String name){
 
         if (transitions.isEmpty()){
             initFirstEmptyTransition();
@@ -20,6 +21,7 @@ public class Transitions {
 
         visitLast();
         transitions.add(s);
+        transitionNames.add(name);
         lastVisited++;
         getColoredNodes(s);
        
@@ -33,6 +35,7 @@ public class Transitions {
         }
         stackedNodes.add(emptyBoolArr);
         markedNodes.add(emptyBoolArr);
+        transitionNames.add("");
     }
 
 
@@ -144,5 +147,6 @@ public class Transitions {
     public static void visitLast(){
         lastVisited = transitions.size() -1;
     }
+
 
 }
