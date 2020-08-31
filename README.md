@@ -12,12 +12,15 @@ To compile the project it is best to use Intellij Idea, as it was used originall
 
 User can:
 * see the change after each modification of the tree
+* browse all transitions of each step of the algorithms
+* see colourful representation of algorithm steps
 * add nodes
 * delete nodes
 * generate pseudorandom tree
 * balance tree
 * find nodes
 * display traversal results (inorder, preorder, postorder)
-* display all the nodes in linear structure
+* delete all nodes
+* adjust font
 
 
