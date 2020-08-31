@@ -7,6 +7,8 @@ import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
@@ -44,11 +46,11 @@ public class TreeViewController {
     private BinarySearchTree tree = new BinarySearchTree();
     private static int originalDiagramFontSize;
 
-    private final Highlighter.HighlightPainter highlightStacked = new MyHighlightPainter(Color.blue);
+    private final Highlighter.HighlightPainter highlightStacked = new MyHighlightPainter(Color.yellow);
     private final Highlighter.HighlightPainter highlightMarked = new MyHighlightPainter(Color.red);
 
     public TreeViewController() {
-        JFrame frame = new JFrame("Binary Search Tree Playground");
+        JFrame frame = new JFrame("Binary Search Tree Modelling Tool");
         frame.setContentPane(panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         makeFrameFullSize(frame);
@@ -177,6 +179,18 @@ public class TreeViewController {
                 updateDiagram(diagram);
             }
             updateTransitionName();
+        });
+        transitionFastForwardBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        transitionFastBackwardBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
         });
     }
 
