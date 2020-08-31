@@ -7,6 +7,8 @@ public class BSTNode {
     private int value; // node data
     private BSTNode left; // left child
     private BSTNode right; // right child
+    private boolean marked;
+    private boolean stacked;
 
     // CONSTRUCTOR
     public BSTNode(int elem) {
@@ -39,6 +41,22 @@ public class BSTNode {
 
     public void setRight(BSTNode right) {
         this.right = right;
+    }
+
+    public boolean isMarked() {
+        return marked;
+    }
+
+    public void setMarked(boolean marked) {
+        this.marked = marked;
+    }
+
+    public boolean isStacked() {
+        return stacked;
+    }
+
+    public void setStacked(boolean stacked) {
+        this.stacked = stacked;
     }
 
     @Override

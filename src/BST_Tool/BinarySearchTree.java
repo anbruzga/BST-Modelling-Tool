@@ -1,6 +1,8 @@
 package BST_Tool;
 
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,21 +21,31 @@ public class BinarySearchTree {
     }
 
     // PUBLIC
-    public void addNode(int value) {
-        root = addRecursive(root, value);
+    public void addNode(int value, boolean doTransitions) {
+        root = addRecursive(root, value, doTransitions);
+        if (doTransitions) {
+            addTransition();
+            traverseAll(root, true, true);
+        }
     }
+
+
+
 
 
     public boolean deleteNode(int value) {
 
-        BSTNode nodeToDelete = findNode(value);
+        BSTNode nodeToDelete = findNode(value, false);
 
+        //todo this kind of avoid highlighting. Is it needed?
         // returns false if node does not exists
         if (nodeToDelete == null){
             return false;
         }
 
         deleteRec(root, value);
+        addTransition();
+        traverseAll(root, true, true);
 
         return true;
     }
@@ -45,8 +57,13 @@ public class BinarySearchTree {
 
         BSTNode tempNode = root;
         while (null != tempNode.getLeft()) {
+            tempNode.setStacked(true);
+            addTransition();
             tempNode = tempNode.getLeft();
         }
+        tempNode.setMarked(true);
+        addTransition();
+        traverseAll(root, true, true);
         return "Min Node: " + tempNode.toString();
     }
 
@@ -58,6 +75,8 @@ public class BinarySearchTree {
 
         BSTNode tempNode = node;
         while (null != tempNode.getLeft()) {
+            tempNode.setStacked(true);
+            addTransition();
             tempNode = tempNode.getLeft();
         }
         return tempNode;
@@ -70,12 +89,19 @@ public class BinarySearchTree {
 
         BSTNode tempNode = root;
         while (null != tempNode.getRight()) {
+            tempNode.setStacked(true);
+            addTransition();
             tempNode = tempNode.getRight();
         }
+
+        tempNode.setMarked(true);
+        addTransition();
+        traverseAll(root, true, true);
+
         return "Max Node: " + tempNode.toString();
     }
 
-    public BSTNode findNode(int nodeValueToFind) {
+    public BSTNode findNode(int nodeValueToFind, boolean addTransitions) {
 
         if (root == null){
             return null;
@@ -83,19 +109,38 @@ public class BinarySearchTree {
 
         BSTNode tempNode = root;
 
+
+
         while(tempNode.getValue() != nodeValueToFind){
+            if (addTransitions){
+                tempNode.setStacked(true);
+                addTransition();
+            }
             if (tempNode.getValue() > nodeValueToFind){
                 tempNode = tempNode.getLeft();
             }
             else if (tempNode.getValue() < nodeValueToFind){
                 tempNode = tempNode.getRight();
             }
+     /*
             else if (tempNode.getValue() == nodeValueToFind){
+                if (addTransitions){
+                    tempNode.setMarked(true);
+                    addTransition();
+                    traverseAll(root, true, true);
+                }
                 return tempNode;
             }
+
+      */
             if (null == tempNode) {
                 return null;
             }
+        }
+        if (addTransitions){
+            tempNode.setMarked(true);
+            addTransition();
+            traverseAll(root, true, true);
         }
         return tempNode;
     }
@@ -109,6 +154,8 @@ public class BinarySearchTree {
         return ts.solve();
     }
 
+
+
     public void balanceTree(){
 
         // getting a inOrder traversed list
@@ -116,12 +163,13 @@ public class BinarySearchTree {
 
         // converting it into an array
         int[] inOrderArr = intListToArray(inOrderList);
+        tempTree = new BinarySearchTree();
         root = sortedArrayToBST(inOrderArr, 0, inOrderArr.length-1);
 
     }
 
-    public List<Integer> getPreOrder(){
-        return preOrder();
+    public List<Integer> getPreOrder(boolean doTransitions){
+        return preOrder(doTransitions);
     }
 
     public List<Integer> getPostOrder(){
@@ -138,22 +186,34 @@ public class BinarySearchTree {
         root = deleteRec(root, key);
     }
 
+    public void clear(){
+        root = null;
+    }
+
     /* A recursive function to insert a new key in BST */
     private BSTNode deleteRec(BSTNode root, int value)
     {
         /* Base Case: If the tree is empty */
         if (root == null)  return root;
 
+        root.setStacked(true);
+        addTransition();
+
         /* Otherwise, recur down the tree */
-        if (value < root.getValue())
+        if (value < root.getValue()) {
             root.setLeft(deleteRec(root.getLeft(), value));
-        else if (value > root.getValue())
+        }
+        else if (value > root.getValue()){
             root.setRight(deleteRec(root.getRight(), value));
+        }
 
             // if key is same as root's key, then This is the node
             // to be deleted
         else
         {
+            root.setMarked(true);
+            addTransition();
+
             // node with only one child or no child
             if (root.getLeft() == null)
                 return root.getRight();
@@ -171,6 +231,42 @@ public class BinarySearchTree {
         return root;
     }
 
+
+    protected String getDiagram (BinarySearchTree tempBst){
+        // doing triangulation:
+        // to save original in a deep copy
+        BinarySearchTree originalDeepCopy = deepCopy(this);
+
+        // to get THIS instance as tempBst
+        BinarySearchTree tempFakeThis = deepCopy(tempBst);
+
+        // to get diagram from this
+        String diagram = tempFakeThis.getDiagram();
+
+        // to reset this back to original this
+        BinarySearchTree thisTree = deepCopy(originalDeepCopy);
+        thisTree = this; // not redundant as this reference matters
+
+        // to return the diagram of tempBst
+        return diagram;
+
+
+    }
+
+    protected BinarySearchTree deepCopy(BinarySearchTree toCopy) {
+
+        BinarySearchTree toPaste = new BinarySearchTree();
+
+        //make deep copy
+        List<Integer> preOrderArgBst = toCopy.preOrder(false);
+        for (int i = 0; i < preOrderArgBst.size(); i++) {
+            toPaste.addNode(preOrderArgBst.get(i), false);
+        }
+        return toPaste;
+    }
+
+
+    private BinarySearchTree tempTree;
     private BSTNode sortedArrayToBST(int arr[], int start, int end) {
 
         if (start > end) {
@@ -181,6 +277,12 @@ public class BinarySearchTree {
         int mid = (start + end) / 2;
         BSTNode node = new BSTNode(arr[mid]);
 
+        tempTree.addNode(mid, true);
+        node.setMarked(true);
+        node.setStacked(true);
+
+        addTransition(tempTree);
+
         // constructing left subtree and making it child of root
         node.setLeft(sortedArrayToBST(arr, start, mid - 1));
 
@@ -188,6 +290,11 @@ public class BinarySearchTree {
         node.setRight(sortedArrayToBST(arr, mid + 1, end));
 
         return node;
+    }
+
+    private void addTransition(BinarySearchTree bst){
+        String diagram = bst.getDiagram(bst);
+        Transitions.add(diagram);
     }
 
     private int[] intListToArray(List<Integer> list) {
@@ -215,10 +322,35 @@ public class BinarySearchTree {
 		System.out.println("");
 	}*/
 
+
+
+    private void traverseAll(BSTNode temp, boolean unmark, boolean unstack) {
+        if (null == temp)
+            return;
+
+        // recur on left child
+        traverseAll(temp.getLeft(), unmark, unstack);
+
+        // unstack and unmark - ifs are needed otherwise it will affect all of them
+        if (unmark) {
+            temp.setMarked(false);
+        }
+        if (unstack) {
+            temp.setStacked(false);
+        }
+
+        // recur on right child
+        traverseAll(temp.getRight(), unmark, unstack);
+
+
+
+    }
+
     private List<Integer> inOrder(){
         List<Integer> inOrderListToPopulate = new ArrayList<>();
         /* passing a list to populate and the root node */
         List<Integer> inOrderList = inOrder(root, inOrderListToPopulate);
+        traverseAll(root, true, true);
         return inOrderList;
     }
 
@@ -227,36 +359,57 @@ public class BinarySearchTree {
         if (null == temp)
             return null;
 
+        temp.setStacked(true);
+        addTransition();
+
         // recur on left child
         inOrder(temp.getLeft(), listToPopulate);
+
+        temp.setMarked(true);
+        addTransition();
 
         // add the data of node
         listToPopulate.add(temp.getValue());
 
         // recur on right child
+
         inOrder(temp.getRight(), listToPopulate);
 
         return listToPopulate;
     }
 
-    private List<Integer> preOrder(){
-        List<Integer> inOrderListToPopulate = new ArrayList<>();
+    private List<Integer> preOrder(Boolean doTransitions){
+        List<Integer> preOrderListToPopulate = new ArrayList<>();
         /* passing a list to populate and the root node */
-        List<Integer> inOrderList = preOrder(root, inOrderListToPopulate);
-        return inOrderList;
+        List<Integer> preOrderList = preOrder(root, preOrderListToPopulate, doTransitions);
+        if (doTransitions) {
+            traverseAll(root, true, true);
+        }
+        return preOrderList;
     }
 
-    private List<Integer> preOrder(BSTNode temp, List<Integer> listToPopulate) {
+    private List<Integer> preOrder(BSTNode temp, List<Integer> listToPopulate, Boolean doTransitions) {
 
-        if (null == temp)
+        if (null == temp) {
             return null;
-
+        }
+        if (doTransitions) {
+            temp.setStacked(true);
+            addTransition();
+        }
         // add the data of node
         listToPopulate.add(temp.getValue());
+        
         // recur on left child
-        preOrder(temp.getLeft(), listToPopulate);
+        preOrder(temp.getLeft(), listToPopulate, doTransitions);
+
         // recur on right child
-        preOrder(temp.getRight(), listToPopulate);
+        preOrder(temp.getRight(), listToPopulate, doTransitions);
+        if (doTransitions) {
+            temp.setMarked(true);
+            addTransition();
+        }
+
 
         return listToPopulate;
     }
@@ -265,6 +418,8 @@ public class BinarySearchTree {
         List<Integer> postOrderListToPopulate = new ArrayList<>();
         /* passing a list to populate and the root node */
         List<Integer> postOrderList = postOrder(root, postOrderListToPopulate);
+        traverseAll(root, true, true);
+
         return postOrderList;
     }
 
@@ -273,6 +428,10 @@ public class BinarySearchTree {
         if (null == temp)
             return null;
 
+
+        temp.setStacked(true);
+        addTransition();
+
         // recur on left child
         postOrder(temp.getLeft(), listToPopulate);
         // recur on right child
@@ -280,18 +439,31 @@ public class BinarySearchTree {
         // add the data of node
         listToPopulate.add(temp.getValue());
 
+        temp.setMarked(true);
+        addTransition();
+
         return listToPopulate;
     }
 
-    private BSTNode addRecursive(BSTNode current, int value) {
+    private BSTNode addRecursive(BSTNode current, int value, Boolean doTransitions) {
+
         if (current == null) {
-            return new BSTNode(value);
+            BSTNode node = new BSTNode(value);
+            if(doTransitions) {
+                node.setMarked(true);
+            }
+            return node;
+        }
+
+        if( doTransitions) {
+            current.setStacked(true);
+            addTransition();
         }
 
         if (value < current.getValue()) {
-            current.setLeft(addRecursive(current.getLeft(), value));
+            current.setLeft(addRecursive(current.getLeft(), value,doTransitions));
         } else if (value > current.getValue()) {
-            current.setRight(addRecursive(current.getRight(), value));
+            current.setRight(addRecursive(current.getRight(), value, doTransitions));
         } else {
             // value already exists
             return current;
@@ -299,6 +471,11 @@ public class BinarySearchTree {
         return current;
     }
 
+    private void addTransition(){
+        TreeString ts = new TreeString();
+        String diagram = ts.solve();
+        Transitions.add(diagram);
+    }
 
 
     public String toString()
@@ -329,7 +506,7 @@ public class BinarySearchTree {
     // Modified version of work by "eirikhalvard" at
     // https://github.com/eirikhalvard ,
     // https://github.com/eirikhalvard/binary-tree-to-string
-    private class TreeString {
+    public class TreeString {
         private int treeHeight;
         private int size;
         private int yHeight;
@@ -344,9 +521,9 @@ public class BinarySearchTree {
             this.size = size(root);
             if (size == 0) {
                 return "(empty tree)";
-            } else if (size == 1) {
-                return "[" + String.valueOf(root.getValue()) + "]";
-            }
+            } //else if (size == 1) {
+              //  return "[" + String.valueOf(root.getValue()) + "]";
+            //}
 
             this.maxWordLength = new int[treeHeight + 1];
             this.yHeight = computeYLength(root);
@@ -518,7 +695,13 @@ public class BinarySearchTree {
             String leftPadding = repeat(" ", leftCount);
             String rightPadding = repeat(" ", rightCount);
 
-            return "[" + leftPadding + String.valueOf(n.getValue()) + rightPadding + "]";
+            if (n.isMarked()){
+                return "%" + leftPadding + String.valueOf(n.getValue()) + rightPadding + "]";
+            }
+            else if (n.isStacked()){
+                return "$" + leftPadding + String.valueOf(n.getValue()) + rightPadding + "]";
+            }
+            else return "[" + leftPadding + String.valueOf(n.getValue()) + rightPadding + "]";
         }
 
         private String repeat(String s, int count) {
