@@ -10,8 +10,6 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class TreeViewController {
     private JPanel panel1;
@@ -83,11 +81,13 @@ public class TreeViewController {
                 displayNumberFormatException();
             }
             updateDiagram();
+            updateTransitionName();
         });
 
         balanceTreeBtn.addActionListener(e -> {
             tree.balanceTree();
             updateDiagram();
+            updateTransitionName();
         });
 
         /* Deleted button
@@ -100,33 +100,39 @@ public class TreeViewController {
         inorderBtn.addActionListener(e -> {
             tree.getInOrder();
             updateDiagram();
+            updateTransitionName();
         });
 
         preOrderBtn.addActionListener(e -> {
             tree.getPreOrder(true);
             updateDiagram();
+            updateTransitionName();
         });
 
         postOrderBtn.addActionListener(e -> {
             tree.getPostOrder();
             updateDiagram();
+            updateTransitionName();
         });
 
         minNodeBtn.addActionListener(e -> {
             tree.showMinNode();
             updateDiagram();
+            updateTransitionName();
         });
 
         maxNodeBtn.addActionListener(e -> {
             tree.showMaxNode();
             updateDiagram();
+            updateTransitionName();
         });
 
-        printAllBtn.addActionListener(e -> {
+        /*printAllBtn.addActionListener(e -> {
             String allNodesStr = tree.printAllNodes();
             changeTextArea(allNodesStr);
+            updateTransitionName();
         });
-
+*/
         addNodeBtn.addActionListener(e -> {
             getNodeToAdd();
             updateDiagram();
@@ -143,6 +149,7 @@ public class TreeViewController {
             Transitions.clear();
             tree.clear();
             textArea.setText("(Empty tree)");
+            updateTransitionName();
         });
 
         fontLargerBtn.addActionListener(e -> {
@@ -160,6 +167,8 @@ public class TreeViewController {
             if (diagram != null) {
                 updateDiagram(diagram);
             }
+            updateTransitionName();
+
         });
 
         nextTransitionBtn.addActionListener(e -> {
@@ -167,7 +176,13 @@ public class TreeViewController {
             if (diagram != null) {
                 updateDiagram(diagram);
             }
+            updateTransitionName();
         });
+    }
+
+    private void updateTransitionName() {
+        String transitionName = Transitions.getTransitionName();
+        transitionNameLabel.setText(transitionName);
     }
 
    /* private void resizeFont(Dimension originalWindowSize) {
@@ -263,6 +278,7 @@ public class TreeViewController {
     private void processDeletionResult(boolean deleted, String value) {
         if (deleted) {
             updateDiagram();
+            updateTransitionName();
         } else {
             int valueInt = Integer.parseInt(value);
             displayValueMissingErrorMsg(valueInt);

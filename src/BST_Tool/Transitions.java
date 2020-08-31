@@ -148,5 +148,12 @@ public class Transitions {
         lastVisited = transitions.size() -1;
     }
 
+    public static String getTransitionName() {
+        return transitionNames.get(lastVisited);
+    }
+
+    public int getLastVisited(){
+        return lastVisited;
+    }
 
 }
