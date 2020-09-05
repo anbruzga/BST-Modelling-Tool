@@ -1,6 +1,8 @@
 # BST-Modelling-Tool
 Create and modify binary search tree, visualise the changes step by step
 
+## NEW FEATURES in development:
+The user will be able to select between Binary Search Tree, AVL tree and Red Black Tree!
 
 ## Installation:
 There is an BST-Tool.jar artifact attached in releases. JRE that supports at least Java 8 is needed to run it (v. 251).
