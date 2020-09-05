@@ -6,6 +6,7 @@ import BST_Tool.Model.Tree;
 
 public class RedBlackTree extends AbstractBST implements Tree {
 
+
     private final String IDENTIFIER = "RBT";
 
     public RedBlackTree(){
