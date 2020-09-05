@@ -42,6 +42,8 @@ public class BinarySearchTree {
         addNode(value, doTransitions);
     }
 
+
+
     public boolean deleteNode(int value) {
 
         BSTNode nodeToDelete = findNode(value, false);
@@ -73,16 +75,16 @@ public class BinarySearchTree {
         tempNode.setMarked(true);
         addTransition(FINDING_MIN);
         traverseAll(root, true, true);
-        return "Min Node: " + tempNode.toString();
+        return tempNode.toString();
     }
 
-    public BSTNode findMinNode(BSTNode node) {
-        if (null == node) {
+    public BSTNode findMinNode(BSTNode root) {
+        if (null == root) {
             System.out.println("The tree is empty!");
             return null;
         }
 
-        BSTNode tempNode = node;
+        BSTNode tempNode = root;
         while (null != tempNode.getLeft()) {
             tempNode.setStacked(true);
             addTransition(FINDING_MIN);
@@ -107,7 +109,7 @@ public class BinarySearchTree {
         addTransition(FINDING_MAX);
         traverseAll(root, true, true);
 
-        return "Max Node: " + tempNode.toString();
+        return tempNode.toString();
     }
 
     public BSTNode findNode(int nodeValueToFind, boolean addTransitions) {
@@ -174,10 +176,6 @@ public class BinarySearchTree {
         return inOrder();
     }
 
-    public void deleteValue(int key) {
-        root = deleteRec(root, key);
-    }
-
     public void clear() {
         root = null;
     }
@@ -220,6 +218,10 @@ public class BinarySearchTree {
         return root;
     }
 
+    public BSTNode getRoot(){
+        return root;
+    }
+
     protected String getDiagram(BinarySearchTree tempBst) {
         // doing triangulation:
         // to save original in a deep copy
@@ -243,16 +245,16 @@ public class BinarySearchTree {
 
     protected BinarySearchTree deepCopy(BinarySearchTree toCopy) {
 
-        BinarySearchTree toPaste = new BinarySearchTree();
+        BinarySearchTree newTree = new BinarySearchTree();
 
         //make deep copy
         List<Integer> preOrderArgBst = toCopy.preOrder(false);
 
         for (int i = 0; i < preOrderArgBst.size(); i++) {
             //System.out.println(preOrderArgBst.get(i) + "pasting");
-            toPaste.addNode(preOrderArgBst.get(i), false);
+            newTree.addNode(preOrderArgBst.get(i), false);
         }
-        return toPaste;
+        return newTree;
     }
 
     private BSTNode sortedArrayToBST(int arr[], int start, int end) {
@@ -470,6 +472,22 @@ public class BinarySearchTree {
         return result.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BinarySearchTree that = (BinarySearchTree) o;
+
+        if (root != null ? !root.equals(that.root) : that.root != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return root != null ? root.hashCode() : 0;
+    }
 
     // Modified version of work by "eirikhalvard" at
     // https://github.com/eirikhalvard ,

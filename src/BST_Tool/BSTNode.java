@@ -67,4 +67,24 @@ public class BSTNode {
                 ", right=" + right +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BSTNode bstNode = (BSTNode) o;
+
+        if (value != bstNode.value) return false;
+        if (left != null ? !left.equals(bstNode.left) : bstNode.left != null) return false;
+        return right != null ? right.equals(bstNode.right) : bstNode.right == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = value;
+        result = 31 * result + (left != null ? left.hashCode() : 0);
+        result = 31 * result + (right != null ? right.hashCode() : 0);
+        return result;
+    }
 }
