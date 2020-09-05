@@ -1,5 +1,6 @@
-import BST_Tool.Model.BSTNode;
-import BST_Tool.Model.BinarySearchTree;
+import BST_Tool.Model.BST.BSTNode;
+import BST_Tool.Model.BST.BinarySearchTree;
+import BST_Tool.Model.Tree;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.LinkedList;
@@ -8,7 +9,7 @@ import java.util.List;
 class BinarySearchTreeTest {
 
 
-    private BinarySearchTree exampleBst;
+    private Tree exampleBst;
     private final String MIN_NODE_STR = "-3";
     private final String MIN_NODE_STR_FULL = "BSTNode{value=-3, left=null, right=null}";
     private final String MAX_NODE_STR_FULL = "BSTNode{value=14, left=BSTNode{value=13, left=null, right=null}, right=null}";
@@ -301,7 +302,7 @@ class BinarySearchTreeTest {
 
     @org.junit.jupiter.api.Test
     void deepCopy() {
-        BinarySearchTree copiedTree = exampleBst.deepCopy(exampleBst);
+        Tree copiedTree = exampleBst.deepCopy(exampleBst);
         assert(copiedTree.equals(exampleBst));
     }
 

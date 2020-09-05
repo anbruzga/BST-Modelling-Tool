@@ -1,7 +1,9 @@
-package BST_Tool.Model;
+package BST_Tool.Model.BST;
 
 
-public class BSTNode {
+import BST_Tool.Model.Node;
+
+public class BSTNode implements Node {
 
     // VARIABLES
     private int value; // node data
@@ -19,42 +21,52 @@ public class BSTNode {
 
 
     // GETTERS SETTERS
+    @Override
     public int getValue() {
         return value;
     }
 
+    @Override
     public void setValue(int value) {
         this.value = value;
     }
 
+    @Override
     public BSTNode getLeft() {
         return left;
     }
 
-    public void setLeft(BSTNode left) {
-        this.left = left;
+    @Override
+    public void setLeft(Node left) {
+        this.left = (BSTNode) left;
     }
 
+    @Override
     public BSTNode getRight() {
         return right;
     }
 
-    public void setRight(BSTNode right) {
-        this.right = right;
+    @Override
+    public void setRight(Node right) {
+        this.right = (BSTNode) right;
     }
 
+    @Override
     public boolean isMarked() {
         return marked;
     }
 
+    @Override
     public void setMarked(boolean marked) {
         this.marked = marked;
     }
 
+    @Override
     public boolean isStacked() {
         return stacked;
     }
 
+    @Override
     public void setStacked(boolean stacked) {
         this.stacked = stacked;
     }

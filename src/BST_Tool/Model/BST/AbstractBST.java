@@ -1,66 +1,30 @@
-package BST_Tool.Model;
+package BST_Tool.Model.BST;
 
+import BST_Tool.Model.Transitions;
+import BST_Tool.Model.Tree;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class BinarySearchTree {
+public abstract class AbstractBST implements Tree {
 
-    private final String ADDING = "Adding Node";
-    private final String DELETING = "Deleting Node";
-    private final String FINDING = "Finding Node";
-    private final String FINDING_MIN = "Finding Min";
-    private final String FINDING_MAX = "Finding Max";
-    private final String INORDER = "Inorder Traversal";
-    private final String PREORDER = "Preorder Traversal";
-    private final String POSTORDER = "Postorder Traversal";
-    private final String BALANCING = "Balancing";
+    protected final String ADDING = "Adding Node";
+    protected final String DELETING = "Deleting Node";
+    protected final String FINDING = "Finding Node";
+    protected final String FINDING_MIN = "Finding Min";
+    protected final String FINDING_MAX = "Finding Max";
+    protected final String INORDER = "Inorder Traversal";
+    protected final String PREORDER = "Preorder Traversal";
+    protected final String POSTORDER = "Postorder Traversal";
+    protected final String BALANCING = "Balancing";
     // VARIABLES
-    private BSTNode root;
-    private BinarySearchTree tempTree;
+    protected BSTNode root;
+    protected Tree tempTree;
 
-    // CONSTRUCTORS
-    public BinarySearchTree(int rootVal) {
-        root = new BSTNode(rootVal);
-    }
+    public abstract void addNode(BSTNode node, boolean doTransitions);
 
-    public BinarySearchTree() {
-    }
-
-    // PUBLIC
-    public void addNode(int value, boolean doTransitions) {
-        root = addRecursive(root, value, doTransitions);
-        if (doTransitions) {
-            addTransition(ADDING);
-            traverseAll(root, true, true);
-        }
-    }
-
-    public void addNode(BSTNode node, boolean doTransitions) {
-        int value = node.getValue();
-        addNode(value, doTransitions);
-    }
-
-
-
-    public boolean deleteNode(int value) {
-
-        BSTNode nodeToDelete = findNode(value, false);
-
-        //todo this kind of avoid highlighting. Is it needed?
-        // returns false if node does not exists
-        if (nodeToDelete == null) {
-            return false;
-        }
-
-        deleteRec(root, value);
-        addTransition(DELETING);
-        traverseAll(root, true, true);
-
-        return true;
-    }
-
+    @Override
     public String showMinNode() {
         if (null == root) {
             return "The tree is empty!";
@@ -78,6 +42,7 @@ public class BinarySearchTree {
         return tempNode.toString();
     }
 
+    @Override
     public BSTNode findMinNode(BSTNode root) {
         if (null == root) {
             System.out.println("The tree is empty!");
@@ -93,6 +58,7 @@ public class BinarySearchTree {
         return tempNode;
     }
 
+    @Override
     public String showMaxNode() {
         if (null == root) {
             return "The tree is empty!";
@@ -112,6 +78,7 @@ public class BinarySearchTree {
         return tempNode.toString();
     }
 
+    @Override
     public BSTNode findNode(int nodeValueToFind, boolean addTransitions) {
 
         if (root == null) {
@@ -143,15 +110,18 @@ public class BinarySearchTree {
         return tempNode;
     }
 
+    @Override
     public String printAllNodes() {
         return (toString(root));
     }
 
+    @Override
     public String getDiagram() {
         TreeString ts = new TreeString();
         return ts.solve();
     }
 
+    @Override
     public void balanceTree() {
 
         // getting a inOrder traversed list
@@ -159,105 +129,41 @@ public class BinarySearchTree {
 
         // converting it into an array
         int[] inOrderArr = intListToArray(inOrderList);
-        tempTree = new BinarySearchTree();
+        tempTree = new BinarySearchTree();// todo refactor this
         root = sortedArrayToBST(inOrderArr, 0, inOrderArr.length - 1);
 
     }
 
+    @Override
     public List<Integer> getPreOrder(boolean doTransitions) {
         return preOrder(doTransitions);
     }
 
+    @Override
     public List<Integer> getPostOrder() {
         return postOrder();
     }
 
+    @Override
     public List<Integer> getInOrder() {
         return inOrder();
     }
 
+    @Override
     public void clear() {
         root = null;
     }
 
     /* A recursive function to insert a new key in BST */
-    private BSTNode deleteRec(BSTNode root, int value) {
-        /* Base Case: If the tree is empty */
-        if (root == null) return root;
+    protected abstract BSTNode deleteRec(BSTNode root, int value);
 
-        root.setStacked(true);
-        addTransition(DELETING);
-
-        /* Otherwise, recur down the tree */
-        if (value < root.getValue()) {
-            root.setLeft(deleteRec(root.getLeft(), value));
-        } else if (value > root.getValue()) {
-            root.setRight(deleteRec(root.getRight(), value));
-        }
-
-        // if key is same as root's key, then This is the node
-        // to be deleted
-        else {
-            root.setMarked(true);
-            addTransition(DELETING);
-
-            // node with only one child or no child
-            if (root.getLeft() == null)
-                return root.getRight();
-            else if (root.getRight() == null)
-                return root.getLeft();
-
-            // node with two children: Get the inorder successor (smallest
-            // in the right subtree)
-            root.setValue(findMinNode(root.getRight()).getValue());
-
-            // Delete the inorder successor
-            root.setRight(deleteRec(root.getRight(), root.getValue()));
-        }
-
+    @Override
+    public BSTNode getRoot() {
         return root;
     }
 
-    public BSTNode getRoot(){
-        return root;
-    }
 
-    protected String getDiagram(BinarySearchTree tempBst) {
-        // doing triangulation:
-        // to save original in a deep copy
-        BinarySearchTree originalDeepCopy = deepCopy(this);
-
-        // to get THIS instance as tempBst
-        BinarySearchTree tempFakeThis = deepCopy(tempBst);
-
-        // to get diagram from this
-        String diagram = tempFakeThis.getDiagram();
-
-        // to reset this back to original this
-        BinarySearchTree thisTree = deepCopy(originalDeepCopy);
-        thisTree = this; // not redundant as this reference matters
-
-        // to return the diagram of tempBst
-        return diagram;
-
-
-    }
-
-    public BinarySearchTree deepCopy(BinarySearchTree toCopy) {
-
-        BinarySearchTree newTree = new BinarySearchTree();
-
-        //make deep copy
-        List<Integer> preOrderArgBst = toCopy.preOrder(false);
-
-        for (int i = 0; i < preOrderArgBst.size(); i++) {
-            //System.out.println(preOrderArgBst.get(i) + "pasting");
-            newTree.addNode(preOrderArgBst.get(i), false);
-        }
-        return newTree;
-    }
-
-    private BSTNode sortedArrayToBST(int arr[], int start, int end) {
+    protected BSTNode sortedArrayToBST(int arr[], int start, int end) {
 
         if (start > end) {
             return null;
@@ -282,12 +188,12 @@ public class BinarySearchTree {
         return node;
     }
 
-    private void addTransition(BinarySearchTree bst, String name) {
-        String diagram = bst.getDiagram(bst);
+    protected void addTransition(Tree tree, String name) {
+        String diagram = tree.getDiagram(tree);
         Transitions.add(diagram, name);
     }
 
-    private int[] intListToArray(List<Integer> list) {
+    protected int[] intListToArray(List<Integer> list) {
         // change list to array
         int[] array = new int[list.size()];
 
@@ -298,7 +204,7 @@ public class BinarySearchTree {
         return array;
     }
 
-    private void traverseAll(BSTNode temp, boolean unmark, boolean unstack) {
+    protected void traverseAll(BSTNode temp, boolean unmark, boolean unstack) {
         if (null == temp)
             return;
 
@@ -319,7 +225,7 @@ public class BinarySearchTree {
 
     }
 
-    private List<Integer> inOrder() {
+    protected List<Integer> inOrder() {
         List<Integer> inOrderListToPopulate = new ArrayList<>();
         /* passing a list to populate and the root node */
         List<Integer> inOrderList = inOrder(root, inOrderListToPopulate);
@@ -327,7 +233,7 @@ public class BinarySearchTree {
         return inOrderList;
     }
 
-    private List<Integer> inOrder(BSTNode temp, List<Integer> listToPopulate) {
+    protected List<Integer> inOrder(BSTNode temp, List<Integer> listToPopulate) {
 
         if (null == temp)
             return null;
@@ -351,7 +257,7 @@ public class BinarySearchTree {
         return listToPopulate;
     }
 
-    private List<Integer> preOrder(Boolean doTransitions) {
+    protected List<Integer> preOrder(Boolean doTransitions) {
         List<Integer> preOrderListToPopulate = new ArrayList<>();
         /* passing a list to populate and the root node */
         List<Integer> preOrderList = preOrder(root, preOrderListToPopulate, doTransitions);
@@ -361,7 +267,7 @@ public class BinarySearchTree {
         return preOrderList;
     }
 
-    private List<Integer> preOrder(BSTNode temp, List<Integer> listToPopulate, Boolean doTransitions) {
+    protected List<Integer> preOrder(BSTNode temp, List<Integer> listToPopulate, Boolean doTransitions) {
 
         if (null == temp) {
             return null;
@@ -387,7 +293,7 @@ public class BinarySearchTree {
         return listToPopulate;
     }
 
-    private List<Integer> postOrder() {
+    protected List<Integer> postOrder() {
         List<Integer> postOrderListToPopulate = new ArrayList<>();
         /* passing a list to populate and the root node */
         List<Integer> postOrderList = postOrder(root, postOrderListToPopulate);
@@ -396,7 +302,7 @@ public class BinarySearchTree {
         return postOrderList;
     }
 
-    private List<Integer> postOrder(BSTNode temp, List<Integer> listToPopulate) {
+    protected List<Integer> postOrder(BSTNode temp, List<Integer> listToPopulate) {
 
         if (null == temp)
             return null;
@@ -418,44 +324,20 @@ public class BinarySearchTree {
         return listToPopulate;
     }
 
-    private BSTNode addRecursive(BSTNode current, int value, Boolean doTransitions) {
+    protected abstract BSTNode addRecursive(BSTNode current, int value, Boolean doTransitions);
 
-        if (current == null) {
-            BSTNode node = new BSTNode(value);
-            if (doTransitions) {
-                node.setMarked(true);
-            }
-            return node;
-        }
-
-        if (doTransitions) {
-            current.setStacked(true);
-            addTransition(ADDING);
-        }
-
-        if (value < current.getValue()) {
-            current.setLeft(addRecursive(current.getLeft(), value, doTransitions));
-        } else if (value > current.getValue()) {
-            current.setRight(addRecursive(current.getRight(), value, doTransitions));
-        } else {
-            // value already exists
-            return current;
-        }
-        return current;
-    }
-
-    private void addTransition(String name) {
+    protected void addTransition(String name) {
         TreeString ts = new TreeString();
         String diagram = ts.solve();
         Transitions.add(diagram, name);
     }
 
-
+    @Override
     public String toString() {
         return toString(root);
     }
 
-    private String toString(BSTNode root) {
+    protected String toString(BSTNode root) {
         StringBuilder result = new StringBuilder();
         if (root == null) {
             result.append("null");
@@ -477,7 +359,7 @@ public class BinarySearchTree {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        BinarySearchTree that = (BinarySearchTree) o;
+        AbstractBST that = (AbstractBST) o;
 
         if (root != null ? !root.equals(that.root) : that.root != null) return false;
 
@@ -493,16 +375,16 @@ public class BinarySearchTree {
     // https://github.com/eirikhalvard ,
     // https://github.com/eirikhalvard/binary-tree-to-string
     public class TreeString {
-        private int treeHeight;
-        private int size;
-        private int yHeight;
-        private int xHeight;
-        private int[] maxWordLength;
-        private int[][] preorderHeights;
-        private char[][] chars;
+        protected int treeHeight;
+        protected int size;
+        protected int yHeight;
+        protected int xHeight;
+        protected int[] maxWordLength;
+        protected int[][] preorderHeights;
+        protected char[][] chars;
 
 
-        private String solve() {
+        protected String solve() {
             this.treeHeight = height(root);
             this.size = size(root);
             if (size == 0) {
@@ -520,7 +402,7 @@ public class BinarySearchTree {
             return charArrayToString();
         }
 
-        private void fillCharsWithWhitespace() {
+        protected void fillCharsWithWhitespace() {
             for (int i = 0; i < yHeight; i++) {
                 for (int j = 0; j < xHeight; j++) {
                     chars[i][j] = ' ';
@@ -528,19 +410,19 @@ public class BinarySearchTree {
             }
         }
 
-        private int height(BSTNode n) {
+        protected int height(BSTNode n) {
             if (n == null) {
                 return -1;
             }
             return 1 + Math.max(height(n.getLeft()), height(n.getRight()));
         }
 
-        private int size(BSTNode n) {
+        protected int size(BSTNode n) {
             if (n == null) return 0;
             return 1 + size(n.getLeft()) + size(n.getRight());
         }
 
-        private void traverseAndWrite() {
+        protected void traverseAndWrite() {
             this.preorderHeights = new int[size][3];
             findPreorderHeights(root, 0);
 
@@ -551,7 +433,7 @@ public class BinarySearchTree {
             traverseAndWrite(root, 0, rootStartY, 0, new int[]{0});
         }
 
-        private void traverseAndWrite(BSTNode n, int depth, int startY, int startX, int[] iterator) {
+        protected void traverseAndWrite(BSTNode n, int depth, int startY, int startX, int[] iterator) {
             int num = preorderHeights[iterator[0]++][0];
             String nodeString = valueString(n, depth);
             writeToCharArray(nodeString, startY, startX);
@@ -573,7 +455,7 @@ public class BinarySearchTree {
             }
         }
 
-        private void writeConnectingLines(int startY, int endY, int startX) {
+        protected void writeConnectingLines(int startY, int endY, int startX) {
             writeToCharArray("--+", startY, startX);
             int diff = endY - startY;
             int increment = diff > 0 ? 1 : -1;
@@ -590,7 +472,7 @@ public class BinarySearchTree {
 
         }
 
-        private int[] findPreorderHeights(BSTNode n, int h) {
+        protected int[] findPreorderHeights(BSTNode n, int h) {
             if (n.getLeft() == null && n.getRight() == null) {
                 preorderHeights[h][0] = 1;
                 return new int[]{preorderHeights[h][0], h};
@@ -614,7 +496,7 @@ public class BinarySearchTree {
             }
         }
 
-        private void writeToCharArray(String line, int y, int x) {
+        protected void writeToCharArray(String line, int y, int x) {
             if (line.length() + x >= xHeight) {
                 new Exception("Line was to long to write");
             }
@@ -624,7 +506,7 @@ public class BinarySearchTree {
             }
         }
 
-        private String charArrayToString() {
+        protected String charArrayToString() {
             String result = "";
             for (int i = 0; i < chars.length; i++) {
                 for (int j = 0; j < chars[0].length; j++) {
@@ -635,7 +517,7 @@ public class BinarySearchTree {
             return result.substring(0, result.length() - 1); // remove last newline
         }
 
-        private int computeYLength(BSTNode n) {
+        protected int computeYLength(BSTNode n) {
             if (n.getLeft() == null && n.getRight() == null) {
                 return 1;
             } else if (n.getRight() == null) {
@@ -647,7 +529,7 @@ public class BinarySearchTree {
             }
         }
 
-        private int computeXLength() {
+        protected int computeXLength() {
             computeMaxWordLength(root, 0);
             int sum = 0;
             for (int i = 0; i < treeHeight; i++) {
@@ -660,7 +542,7 @@ public class BinarySearchTree {
             return sum;
         }
 
-        private void computeMaxWordLength(BSTNode n, int depth) {
+        protected void computeMaxWordLength(BSTNode n, int depth) {
             if (n == null) return;
             int nodeStringLength = ("" + n.getValue()).length();
             if (nodeStringLength > maxWordLength[depth]) {
@@ -670,7 +552,7 @@ public class BinarySearchTree {
             computeMaxWordLength(n.getRight(), depth + 1);
         }
 
-        private String valueString(BSTNode n, int depth) {
+        protected String valueString(BSTNode n, int depth) {
 
             String result = "";
             int totalCount = maxWordLength[depth] - ("" + n.getValue()).length();
@@ -688,7 +570,7 @@ public class BinarySearchTree {
             } else return "[" + leftPadding + String.valueOf(n.getValue()) + rightPadding + "]";
         }
 
-        private String repeat(String s, int count) {
+        protected String repeat(String s, int count) {
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < count; i++) {
                 result.append(s);
@@ -696,6 +578,4 @@ public class BinarySearchTree {
             return result.toString();
         }
     }
-
-
 }
