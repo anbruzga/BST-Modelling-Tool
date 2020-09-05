@@ -1,18 +1,23 @@
 package BST_Tool.Model.BST;
 
 
+import BST_Tool.Model.Node;
 import BST_Tool.Model.Tree;
 
 import java.util.List;
 
 public class BinarySearchTree extends AbstractBST implements Tree {
 
+    private final String IDENTIFIER = "BST";
+
     // CONSTRUCTORS
     public BinarySearchTree(int rootVal) {
+        super.identifier = IDENTIFIER;
         root = new BSTNode(rootVal);
     }
 
     public BinarySearchTree() {
+        super.identifier = IDENTIFIER;
     }
 
     // PUBLIC
@@ -26,19 +31,15 @@ public class BinarySearchTree extends AbstractBST implements Tree {
     }
 
     @Override
-    public void addNode(BSTNode node, boolean doTransitions) {
+    public void addNode(Node node, boolean doTransitions) {
         int value = node.getValue();
         addNode(value, doTransitions);
     }
 
-
-
     @Override
     public boolean deleteNode(int value) {
+        Node nodeToDelete = findNode(value, false);
 
-        BSTNode nodeToDelete = findNode(value, false);
-
-        //todo this kind of avoid highlighting. Is it needed?
         // returns false if node does not exists
         if (nodeToDelete == null) {
             return false;
@@ -51,16 +52,16 @@ public class BinarySearchTree extends AbstractBST implements Tree {
         return true;
     }
 
-    /* A recursive function to insert a new key in BST */
+    // A recursive function to insert a new key in BST
     @Override
-    protected BSTNode deleteRec(BSTNode root, int value) {
-        /* Base Case: If the tree is empty */
+    protected Node deleteRec(Node root, int value) {
+        // Base Case: If the tree is empty
         if (root == null) return root;
 
         root.setStacked(true);
         addTransition(DELETING);
 
-        /* Otherwise, recur down the tree */
+        // Otherwise, recur down the tree
         if (value < root.getValue()) {
             root.setLeft(deleteRec(root.getLeft(), value));
         } else if (value > root.getValue()) {
@@ -91,10 +92,10 @@ public class BinarySearchTree extends AbstractBST implements Tree {
     }
 
     @Override
-    protected BSTNode addRecursive(BSTNode current, int value, Boolean doTransitions) {
+    protected Node addRecursive(Node current, int value, Boolean doTransitions) {
 
         if (current == null) {
-            BSTNode node = new BSTNode(value);
+            Node node = new BSTNode(value);
             if (doTransitions) {
                 node.setMarked(true);
             }
@@ -147,9 +148,8 @@ public class BinarySearchTree extends AbstractBST implements Tree {
         //make deep copy
         List<Integer> preOrderArgBst = toCopy.getPreOrder(false);
 
-        for (int i = 0; i < preOrderArgBst.size(); i++) {
-            //System.out.println(preOrderArgBst.get(i) + "pasting");
-            newTree.addNode(preOrderArgBst.get(i), false);
+        for (Integer integer : preOrderArgBst) {
+            newTree.addNode(integer, false);
         }
         return newTree;
     }

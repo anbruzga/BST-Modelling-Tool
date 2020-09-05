@@ -1,7 +1,5 @@
 package BST_Tool.Model;
 
-import BST_Tool.Model.BST.BSTNode;
-
 import java.util.List;
 
 public interface Tree {
@@ -12,11 +10,11 @@ public interface Tree {
 
     String showMinNode();
 
-    BSTNode findMinNode(BSTNode root);
+    Node findMinNode(Node root);
 
     String showMaxNode();
 
-    BSTNode findNode(int nodeValueToFind, boolean addTransitions);
+    Node findNode(int nodeValueToFind, boolean addTransitions);
 
     String getDiagram();
 
@@ -32,7 +30,7 @@ public interface Tree {
 
     void clear();
 
-    BSTNode getRoot();
+    Node getRoot();
 
     Tree deepCopy(Tree toCopy);
 

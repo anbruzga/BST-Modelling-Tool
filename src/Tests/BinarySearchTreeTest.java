@@ -1,5 +1,6 @@
 import BST_Tool.Model.BST.BSTNode;
 import BST_Tool.Model.BST.BinarySearchTree;
+import BST_Tool.Model.Node;
 import BST_Tool.Model.Tree;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -124,8 +125,8 @@ class BinarySearchTreeTest {
     @org.junit.jupiter.api.Test
     void findMinNode() {
 
-        BSTNode root = exampleBst.getRoot();
-        BSTNode minNode = exampleBst.findMinNode(root);
+        Node root = exampleBst.getRoot();
+        Node minNode = exampleBst.findMinNode(root);
         int minValue = minNode.getValue();
         System.out.println(minValue);
         assert (minValue == Integer.parseInt(MIN_NODE_STR));
@@ -141,13 +142,13 @@ class BinarySearchTreeTest {
     @org.junit.jupiter.api.Test
     void findNode() {
 
-        BSTNode node = exampleBst.findNode(11,false);
+        Node node = exampleBst.findNode(11,false);
         assert (node != null);
 
-        BSTNode node2 = exampleBst.findNode(-3, false);
+        Node node2 = exampleBst.findNode(-3, false);
         assert (node2 != null);
 
-        BSTNode node3 = exampleBst.findNode(55,false);
+        Node node3 = exampleBst.findNode(55,false);
         assert (null == node3);
     }
 
@@ -292,7 +293,7 @@ class BinarySearchTreeTest {
     @org.junit.jupiter.api.Test
     void clear() {
         exampleBst.clear();
-        BSTNode root = exampleBst.getRoot();
+        Node root = exampleBst.getRoot();
         assert(root == null);
 
         List<Integer> inOrder = exampleBst.getInOrder();
@@ -310,6 +311,8 @@ class BinarySearchTreeTest {
     void testToString() {
         String goodToString = "12(12, 10(10, -310(10, -3, 11)12(12, 10(10, -310(10, -3, 11), 14(14, 1314(14, 13, null))";
         String TreeToString = exampleBst.toString();
+        System.out.println(TreeToString);
+        System.out.println(exampleBst.getDiagram());
         assert (goodToString.equals(TreeToString));
 
     }

@@ -1,8 +1,7 @@
 package BST_Tool.Controller;
 
-
-import BST_Tool.Model.BST.BSTNode;
 import BST_Tool.Model.BST.BinarySearchTree;
+import BST_Tool.Model.Node;
 import BST_Tool.Model.Transitions;
 
 import javax.swing.*;
@@ -11,10 +10,6 @@ import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 
 public class TreeViewController {
@@ -23,18 +18,14 @@ public class TreeViewController {
     private JButton addNodeBtn;
     private JButton delNodeBtn;
     private JButton minNodeBtn;
-    private JButton printAllBtn;
     private JButton inorderBtn;
     private JButton postOrderBtn;
     private JButton randTreeBtn;
-    private JButton printTreeBtn;
-    private JButton exitBtn;
     private JButton findNodeBtn;
     private JButton maxNodeBtn;
     private JButton preOrderBtn;
     private JButton balanceTreeBtn;
     private JTextField valueInputTF;
-    private JLabel transitionsLabel;
     private JButton nextTransitionBtn;
     private JButton prevTransitionBtn;
     private JButton deleteAllNodesButton;
@@ -46,6 +37,7 @@ public class TreeViewController {
     private JTextField minValueTextField;
     private JTextField maxValueTextField;
     private JLabel transitionNameLabel;
+    private JLabel transitionsLabel;
 
     private BinarySearchTree tree = new BinarySearchTree();
     private static int originalDiagramFontSize;
@@ -63,20 +55,6 @@ public class TreeViewController {
 
 
         originalDiagramFontSize = textArea.getFont().getSize();
-        Dimension originalWindowSize = panel1.getSize();
-
-        panel1.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                // resizeFont(originalWindowSize);
-            }
-
-            @Override
-            public void componentMoved(ComponentEvent e) {
-
-            }
-        });
-
 
         randTreeBtn.addActionListener(e -> {
             Transitions.clear();
@@ -184,17 +162,13 @@ public class TreeViewController {
             }
             updateTransitionName();
         });
-        transitionFastForwardBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-            }
+        transitionFastForwardBtn.addActionListener(e -> {
+
         });
-        transitionFastBackwardBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-            }
+        transitionFastBackwardBtn.addActionListener(e -> {
+
         });
     }
 
@@ -257,7 +231,7 @@ public class TreeViewController {
             return true;
         }
         catch(java.lang.NumberFormatException e){
-            System.out.println(e);
+            System.out.println(e.toString());
             return false;
         }
     }
@@ -266,11 +240,9 @@ public class TreeViewController {
         String value = valueInputTF.getText();
         if (isInteger(value)){
             int intVal = Integer.parseInt(value);
-            BSTNode node = tree.findNode(intVal, true);
+            Node node = tree.findNode(intVal, true);
             if (node == null) {
                 displayValueMissingErrorMsg(intVal);
-            } else {
-                //changeTextArea("Node found: " + node.toString());
             }
         }
         else {
@@ -280,7 +252,7 @@ public class TreeViewController {
 
     // Gets node value to delete and deletes it
     private void getNodeToDelete() { // todo check if int is not too big/ too small
-        boolean deleted = false;
+        boolean deleted;
         String value = valueInputTF.getText();
         if (isInteger(value)) {
             deleted = deleteNode(value);
@@ -392,14 +364,14 @@ public class TreeViewController {
 
             Boolean[] stackedNodes = Transitions.getStackedNodes();
             ArrayList<String> stackedStringList = getTextToColour(diagram, stackedNodes);
-            for (int i = 0; i < stackedStringList.size(); i++) {
-                highlight(textArea, stackedStringList.get(i), highlightStacked);
+            for (String s : stackedStringList) {
+                highlight(textArea, s, highlightStacked);
             }
 
             Boolean[] markedNodes = Transitions.getMarkedNodes();
             ArrayList<String> markedStringList = getTextToColour(diagram, markedNodes);
-            for (int i = 0; i < markedStringList.size(); i++) {
-                highlight(textArea, markedStringList.get(i), highlightMarked);
+            for (String s : markedStringList) {
+                highlight(textArea, s, highlightMarked);
             }
         }
     }
@@ -433,11 +405,6 @@ public class TreeViewController {
         return colorfulText;
     }
 
-
-    private void changeTextArea(String str){
-        textArea.setText(str);
-    }
-
     private static boolean isInteger(String s) {
         return s.matches("-?(0|[1-9]\\d*)");
     }
@@ -454,7 +421,7 @@ public class TreeViewController {
             }
         }
         catch(Exception e){
-
+            System.out.println(e.toString());
         }
     }
 
@@ -462,7 +429,7 @@ public class TreeViewController {
         // TODO: place custom component creation code here
     }
 
-    private class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter{
+    private static class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter{
 
         /**
          * Constructs a new highlight painter. If <code>c</code> is null,
@@ -473,9 +440,6 @@ public class TreeViewController {
         public MyHighlightPainter(Color c) {
             super(c);
         }
-
-
-
 
     }
 }

@@ -1,22 +1,29 @@
 package BST_Tool.Model.AVL;
 
 import BST_Tool.Model.BST.AbstractBST;
-import BST_Tool.Model.BST.BSTNode;
+import BST_Tool.Model.Node;
 import BST_Tool.Model.Tree;
 
 public class AVLTree extends AbstractBST implements Tree {
+
+    private final String IDENTIFIER = "AVL";
+
+    public AVLTree(){
+        super.identifier = IDENTIFIER;
+    }
+
     @Override
-    public void addNode(BSTNode node, boolean doTransitions) {
+    public void addNode(Node node, boolean doTransitions) {
 
     }
 
     @Override
-    protected BSTNode deleteRec(BSTNode root, int value) {
+    protected Node deleteRec(Node root, int value) {
         return null;
     }
 
     @Override
-    protected BSTNode addRecursive(BSTNode current, int value, Boolean doTransitions) {
+    protected Node addRecursive(Node current, int value, Boolean doTransitions) {
         return null;
     }
 

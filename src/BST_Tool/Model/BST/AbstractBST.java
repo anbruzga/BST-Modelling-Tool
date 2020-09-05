@@ -1,11 +1,17 @@
 package BST_Tool.Model.BST;
 
+import BST_Tool.Model.AVL.AVLNode;
+import BST_Tool.Model.AVL.AVLTree;
+import BST_Tool.Model.Node;
+import BST_Tool.Model.RedBlack.RedBlackNode;
+import BST_Tool.Model.RedBlack.RedBlackTree;
 import BST_Tool.Model.Transitions;
 import BST_Tool.Model.Tree;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class AbstractBST implements Tree {
 
@@ -17,12 +23,15 @@ public abstract class AbstractBST implements Tree {
     protected final String INORDER = "Inorder Traversal";
     protected final String PREORDER = "Preorder Traversal";
     protected final String POSTORDER = "Postorder Traversal";
-    protected final String BALANCING = "Balancing";
-    // VARIABLES
-    protected BSTNode root;
+    protected Node root;
     protected Tree tempTree;
+    protected String identifier;
 
-    public abstract void addNode(BSTNode node, boolean doTransitions);
+
+    //________________________________________
+    // INTERFACE:
+
+    public abstract void addNode(Node node, boolean doTransitions);
 
     @Override
     public String showMinNode() {
@@ -30,7 +39,7 @@ public abstract class AbstractBST implements Tree {
             return "The tree is empty!";
         }
 
-        BSTNode tempNode = root;
+        Node tempNode = root;
         while (null != tempNode.getLeft()) {
             tempNode.setStacked(true);
             addTransition(FINDING_MIN);
@@ -43,13 +52,13 @@ public abstract class AbstractBST implements Tree {
     }
 
     @Override
-    public BSTNode findMinNode(BSTNode root) {
+    public Node findMinNode(Node root) {
         if (null == root) {
             System.out.println("The tree is empty!");
             return null;
         }
 
-        BSTNode tempNode = root;
+        Node tempNode = root;
         while (null != tempNode.getLeft()) {
             tempNode.setStacked(true);
             addTransition(FINDING_MIN);
@@ -64,7 +73,7 @@ public abstract class AbstractBST implements Tree {
             return "The tree is empty!";
         }
 
-        BSTNode tempNode = root;
+        Node tempNode = root;
         while (null != tempNode.getRight()) {
             tempNode.setStacked(true);
             addTransition(FINDING_MAX);
@@ -79,13 +88,13 @@ public abstract class AbstractBST implements Tree {
     }
 
     @Override
-    public BSTNode findNode(int nodeValueToFind, boolean addTransitions) {
+    public Node findNode(int nodeValueToFind, boolean addTransitions) {
 
         if (root == null) {
             return null;
         }
 
-        BSTNode tempNode = root;
+        Node tempNode = root;
 
         while (tempNode.getValue() != nodeValueToFind) {
             if (addTransitions) {
@@ -129,7 +138,7 @@ public abstract class AbstractBST implements Tree {
 
         // converting it into an array
         int[] inOrderArr = intListToArray(inOrderList);
-        tempTree = new BinarySearchTree();// todo refactor this
+        tempTree = createNewTree();
         root = sortedArrayToBST(inOrderArr, 0, inOrderArr.length - 1);
 
     }
@@ -154,16 +163,54 @@ public abstract class AbstractBST implements Tree {
         root = null;
     }
 
-    /* A recursive function to insert a new key in BST */
-    protected abstract BSTNode deleteRec(BSTNode root, int value);
+    protected abstract Node deleteRec(Node root, int value);
 
     @Override
-    public BSTNode getRoot() {
+    public Node getRoot() {
         return root;
     }
 
+    @Override
+    public String toString() {
+        return toString(root);
+    }
 
-    protected BSTNode sortedArrayToBST(int arr[], int start, int end) {
+    protected String toString(Node root) {
+        StringBuilder result = new StringBuilder();
+        if (root == null) {
+            result.append("null");
+        } else {
+        result.append(result.toString() + root.getValue());
+        if (root.getLeft() != null || root.getRight() != null) {
+            result.append("(" + result.toString() + ", "
+                    + toString(root.getLeft()));
+            result.append(result.toString() + ", "
+                    + toString(root.getRight()) + ")");
+        }
+    }
+
+        return result.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AbstractBST that = (AbstractBST) o;
+
+        return Objects.equals(root, that.root);
+    }
+
+    @Override
+    public int hashCode() {
+        return root != null ? root.hashCode() : 0;
+    }
+
+    //________________________________________
+
+
+    protected Node sortedArrayToBST(int[] arr, int start, int end) {
 
         if (start > end) {
             return null;
@@ -171,9 +218,10 @@ public abstract class AbstractBST implements Tree {
 
         // making middle element root
         int mid = (start + end) / 2;
-        BSTNode node = new BSTNode(arr[mid]);
+        Node node = createNewNode(arr[mid]);
 
         tempTree.addNode(arr[mid], true);
+        assert node != null;
         node.setMarked(true);
         node.setStacked(true);
 
@@ -188,6 +236,9 @@ public abstract class AbstractBST implements Tree {
         return node;
     }
 
+
+    // IntelliJ fails to see that name is changed by subclasses,
+    // therefore do not listen to IntelliJ "error"
     protected void addTransition(Tree tree, String name) {
         String diagram = tree.getDiagram(tree);
         Transitions.add(diagram, name);
@@ -204,7 +255,7 @@ public abstract class AbstractBST implements Tree {
         return array;
     }
 
-    protected void traverseAll(BSTNode temp, boolean unmark, boolean unstack) {
+    protected void traverseAll(Node temp, boolean unmark, boolean unstack) {
         if (null == temp)
             return;
 
@@ -233,7 +284,7 @@ public abstract class AbstractBST implements Tree {
         return inOrderList;
     }
 
-    protected List<Integer> inOrder(BSTNode temp, List<Integer> listToPopulate) {
+    protected List<Integer> inOrder(Node temp, List<Integer> listToPopulate) {
 
         if (null == temp)
             return null;
@@ -267,7 +318,7 @@ public abstract class AbstractBST implements Tree {
         return preOrderList;
     }
 
-    protected List<Integer> preOrder(BSTNode temp, List<Integer> listToPopulate, Boolean doTransitions) {
+    protected List<Integer> preOrder(Node temp, List<Integer> listToPopulate, Boolean doTransitions) {
 
         if (null == temp) {
             return null;
@@ -302,7 +353,7 @@ public abstract class AbstractBST implements Tree {
         return postOrderList;
     }
 
-    protected List<Integer> postOrder(BSTNode temp, List<Integer> listToPopulate) {
+    protected List<Integer> postOrder(Node temp, List<Integer> listToPopulate) {
 
         if (null == temp)
             return null;
@@ -324,7 +375,7 @@ public abstract class AbstractBST implements Tree {
         return listToPopulate;
     }
 
-    protected abstract BSTNode addRecursive(BSTNode current, int value, Boolean doTransitions);
+    protected abstract Node addRecursive(Node current, int value, Boolean doTransitions);
 
     protected void addTransition(String name) {
         TreeString ts = new TreeString();
@@ -332,44 +383,36 @@ public abstract class AbstractBST implements Tree {
         Transitions.add(diagram, name);
     }
 
-    @Override
-    public String toString() {
-        return toString(root);
-    }
-
-    protected String toString(BSTNode root) {
-        StringBuilder result = new StringBuilder();
-        if (root == null) {
-            result.append("null");
-        } else {
-            result.append(result.toString() + root.getValue());
-            if (root.getLeft() != null || root.getRight() != null) {
-                result.append("(" + result.toString() + ", "
-                        + toString(root.getLeft()));
-                result.append(result.toString() + ", "
-                        + toString(root.getRight()) + ")");
-            }
+    private Tree createNewTree() {
+        switch(identifier){
+            case "BST":
+                tempTree = new BinarySearchTree();
+                break;
+            case "AVL":
+                tempTree = new AVLTree();
+                break;
+            case "RBT":
+                tempTree = new RedBlackTree();
+                break;
+            default:
+                return null;
         }
-
-        return result.toString();
+        return tempTree;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AbstractBST that = (AbstractBST) o;
-
-        if (root != null ? !root.equals(that.root) : that.root != null) return false;
-
-        return true;
+    private Node createNewNode(int value) {
+        switch(identifier){
+            case "BST":
+                return new BSTNode(value);
+            case "AVL":
+                return new AVLNode(value);
+            case "RBT":
+                return new RedBlackNode(value);
+            default:
+                return null;
+        }
     }
 
-    @Override
-    public int hashCode() {
-        return root != null ? root.hashCode() : 0;
-    }
 
     // Modified version of work by "eirikhalvard" at
     // https://github.com/eirikhalvard ,
@@ -410,14 +453,14 @@ public abstract class AbstractBST implements Tree {
             }
         }
 
-        protected int height(BSTNode n) {
+        protected int height(Node n) {
             if (n == null) {
                 return -1;
             }
             return 1 + Math.max(height(n.getLeft()), height(n.getRight()));
         }
 
-        protected int size(BSTNode n) {
+        protected int size(Node n) {
             if (n == null) return 0;
             return 1 + size(n.getLeft()) + size(n.getRight());
         }
@@ -433,7 +476,7 @@ public abstract class AbstractBST implements Tree {
             traverseAndWrite(root, 0, rootStartY, 0, new int[]{0});
         }
 
-        protected void traverseAndWrite(BSTNode n, int depth, int startY, int startX, int[] iterator) {
+        protected void traverseAndWrite(Node n, int depth, int startY, int startX, int[] iterator) {
             int num = preorderHeights[iterator[0]++][0];
             String nodeString = valueString(n, depth);
             writeToCharArray(nodeString, startY, startX);
@@ -472,7 +515,7 @@ public abstract class AbstractBST implements Tree {
 
         }
 
-        protected int[] findPreorderHeights(BSTNode n, int h) {
+        protected int[] findPreorderHeights(Node n, int h) {
             if (n.getLeft() == null && n.getRight() == null) {
                 preorderHeights[h][0] = 1;
                 return new int[]{preorderHeights[h][0], h};
@@ -507,17 +550,17 @@ public abstract class AbstractBST implements Tree {
         }
 
         protected String charArrayToString() {
-            String result = "";
-            for (int i = 0; i < chars.length; i++) {
+            StringBuilder result = new StringBuilder();
+            for (char[] aChar : chars) {
                 for (int j = 0; j < chars[0].length; j++) {
-                    result += String.valueOf(chars[i][j]);
+                    result.append(String.valueOf(aChar[j]));
                 }
-                result += "\n";
+                result.append("\n");
             }
             return result.substring(0, result.length() - 1); // remove last newline
         }
 
-        protected int computeYLength(BSTNode n) {
+        protected int computeYLength(Node n) {
             if (n.getLeft() == null && n.getRight() == null) {
                 return 1;
             } else if (n.getRight() == null) {
@@ -542,7 +585,7 @@ public abstract class AbstractBST implements Tree {
             return sum;
         }
 
-        protected void computeMaxWordLength(BSTNode n, int depth) {
+        protected void computeMaxWordLength(Node n, int depth) {
             if (n == null) return;
             int nodeStringLength = ("" + n.getValue()).length();
             if (nodeStringLength > maxWordLength[depth]) {
@@ -552,7 +595,7 @@ public abstract class AbstractBST implements Tree {
             computeMaxWordLength(n.getRight(), depth + 1);
         }
 
-        protected String valueString(BSTNode n, int depth) {
+        protected String valueString(Node n, int depth) {
 
             String result = "";
             int totalCount = maxWordLength[depth] - ("" + n.getValue()).length();
