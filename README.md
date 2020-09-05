@@ -4,7 +4,6 @@ Create and modify binary search tree, visualise the changes step by step
 
 ## Installation:
 There is an BST-Tool.jar artifact attached in releases. JRE that supports at least Java 8 is needed to run it (v. 251).
-To compile the project it is best to use Intellij Idea, as it was used originally.
 
 ![alt text](screenshot.png)
 
