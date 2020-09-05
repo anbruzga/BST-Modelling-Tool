@@ -1,4 +1,4 @@
-package BST_Tool;
+package BST_Tool.Model;
 
 
 import java.util.ArrayList;
@@ -243,7 +243,7 @@ public class BinarySearchTree {
 
     }
 
-    protected BinarySearchTree deepCopy(BinarySearchTree toCopy) {
+    public BinarySearchTree deepCopy(BinarySearchTree toCopy) {
 
         BinarySearchTree newTree = new BinarySearchTree();
 

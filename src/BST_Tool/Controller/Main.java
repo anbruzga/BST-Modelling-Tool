@@ -1,4 +1,4 @@
-package BST_Tool;
+package BST_Tool.Controller;
 
 public class Main {
 

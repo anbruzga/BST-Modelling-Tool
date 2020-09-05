@@ -1,12 +1,9 @@
-package BST_Tool;
-
-import org.junit.jupiter.api.BeforeAll;
+import BST_Tool.Model.BSTNode;
+import BST_Tool.Model.BinarySearchTree;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class BinarySearchTreeTest {
 

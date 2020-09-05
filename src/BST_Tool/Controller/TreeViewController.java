@@ -1,5 +1,9 @@
-package BST_Tool;
+package BST_Tool.Controller;
 
+
+import BST_Tool.Model.BSTNode;
+import BST_Tool.Model.BinarySearchTree;
+import BST_Tool.Model.Transitions;
 
 import javax.swing.*;
 import javax.swing.text.DefaultHighlighter;

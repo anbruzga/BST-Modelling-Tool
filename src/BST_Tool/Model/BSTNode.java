@@ -1,4 +1,4 @@
-package BST_Tool;
+package BST_Tool.Model;
 
 
 public class BSTNode {

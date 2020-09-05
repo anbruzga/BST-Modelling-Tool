@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: BST_Tool.Main
+Main-Class: BST_Tool.Controller.Main
 
