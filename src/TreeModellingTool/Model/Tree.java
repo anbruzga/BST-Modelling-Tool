@@ -32,6 +32,8 @@ public interface Tree {
 
     Node getRoot();
 
+    void setRoot(Node root);
+
     Tree deepCopy(Tree toCopy);
 
     String toString();
@@ -43,4 +45,6 @@ public interface Tree {
     int hashCode();
 
     String printAllNodes();
+
+
 }

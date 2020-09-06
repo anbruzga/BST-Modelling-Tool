@@ -38,14 +38,14 @@ class AVLTreeTest {
         tree.addNode(33, false);
         String goodDiagram =
                 "               +--[1 ]\n" +
-                "               |      \n" +
-                "      +--[2 ]--+      \n" +
-                "      |               \n" +
-                "[10]--+               \n" +
-                "      |               \n" +
-                "      +--[25]--+      \n" +
-                "               |      \n" +
-                "               +--[33]";
+                        "               |      \n" +
+                        "      +--[2 ]--+      \n" +
+                        "      |               \n" +
+                        "[10]--+               \n" +
+                        "      |               \n" +
+                        "      +--[25]--+      \n" +
+                        "               |      \n" +
+                        "               +--[33]";
         assert(tree.getDiagram().equals(goodDiagram));
         System.out.println(tree.getDiagram());
     }
@@ -65,22 +65,22 @@ class AVLTreeTest {
         System.out.println(tree.getDiagram());
         String goodDiagram =
                 "                        +--[4]\n" +
-                "                        |     \n" +
-                "               +--[5 ]--+     \n" +
-                "               |        |     \n" +
-                "               |        +--[6]\n" +
-                "               |              \n" +
-                "      +--[10]--+              \n" +
-                "      |        |              \n" +
-                "      |        +--[11]        \n" +
-                "      |                       \n" +
-                "[13]--+                       \n" +
-                "      |                       \n" +
-                "      |        +--[14]        \n" +
-                "      |        |              \n" +
-                "      +--[15]--+              \n" +
-                "               |              \n" +
-                "               +--[16]        ";
+                        "                        |     \n" +
+                        "               +--[5 ]--+     \n" +
+                        "               |        |     \n" +
+                        "               |        +--[6]\n" +
+                        "               |              \n" +
+                        "      +--[10]--+              \n" +
+                        "      |        |              \n" +
+                        "      |        +--[11]        \n" +
+                        "      |                       \n" +
+                        "[13]--+                       \n" +
+                        "      |                       \n" +
+                        "      |        +--[14]        \n" +
+                        "      |        |              \n" +
+                        "      +--[15]--+              \n" +
+                        "               |              \n" +
+                        "               +--[16]        ";
         assert(tree.getDiagram().equals(goodDiagram));
     }
 
@@ -99,22 +99,22 @@ class AVLTreeTest {
         System.out.println(tree.getDiagram());
         String goodDiagram =
                 "                        +--[3 ]\n" +
-                "                        |      \n" +
-                "               +--[4 ]--+      \n" +
-                "               |               \n" +
-                "      +--[5 ]--+               \n" +
-                "      |        |               \n" +
-                "      |        |        +--[8 ]\n" +
-                "      |        |        |      \n" +
-                "      |        +--[10]--+      \n" +
-                "      |                 |      \n" +
-                "      |                 +--[11]\n" +
-                "      |                        \n" +
-                "[13]--+                        \n" +
-                "      |                        \n" +
-                "      +--[15]--+               \n" +
-                "               |               \n" +
-                "               +--[16]         ";
+                        "                        |      \n" +
+                        "               +--[4 ]--+      \n" +
+                        "               |               \n" +
+                        "      +--[5 ]--+               \n" +
+                        "      |        |               \n" +
+                        "      |        |        +--[8 ]\n" +
+                        "      |        |        |      \n" +
+                        "      |        +--[10]--+      \n" +
+                        "      |                 |      \n" +
+                        "      |                 +--[11]\n" +
+                        "      |                        \n" +
+                        "[13]--+                        \n" +
+                        "      |                        \n" +
+                        "      +--[15]--+               \n" +
+                        "               |               \n" +
+                        "               +--[16]         ";
         assert(tree.getDiagram().equals(goodDiagram));
 
     }
@@ -131,16 +131,16 @@ class AVLTreeTest {
         System.out.println(tree.getDiagram());
         String goodDiagram =
                 "               +--[5 ]\n" +
-                "               |      \n" +
-                "      +--[30]--+      \n" +
-                "      |        |      \n" +
-                "      |        +--[32]\n" +
-                "      |               \n" +
-                "[35]--+               \n" +
-                "      |               \n" +
-                "      +--[40]--+      \n" +
-                "               |      \n" +
-                "               +--[45]";
+                        "               |      \n" +
+                        "      +--[30]--+      \n" +
+                        "      |        |      \n" +
+                        "      |        +--[32]\n" +
+                        "      |               \n" +
+                        "[35]--+               \n" +
+                        "      |               \n" +
+                        "      +--[40]--+      \n" +
+                        "               |      \n" +
+                        "               +--[45]";
         assert(tree.getDiagram().equals(goodDiagram));
     }
 
@@ -174,7 +174,7 @@ class AVLTreeTest {
                 "      |                        \n" +
                 "      +--[15]--+               \n" +
                 "               |               \n" +
-                "               +--[16]         \n";
+                "               +--[16]         ";
         assert(tree.getDiagram().equals(goodDiagram));
     }
 
@@ -194,24 +194,24 @@ class AVLTreeTest {
         System.out.println(tree.getDiagram());
         String goodDiagram =
                 "                       +--[1]\n" +
-                "                       |     \n" +
-                "              +--[2 ]--+     \n" +
-                "              |        |     \n" +
-                "              |        +--[3]\n" +
-                "              |              \n" +
-                "     +--[4 ]--+              \n" +
-                "     |        |              \n" +
-                "     |        +--[5 ]--+     \n" +
-                "     |                 |     \n" +
-                "     |                 +--[6]\n" +
-                "     |                       \n" +
-                "[7]--+                       \n" +
-                "     |                       \n" +
-                "     |        +--[9 ]        \n" +
-                "     |        |              \n" +
-                "     +--[15]--+              \n" +
-                "              |              \n" +
-                "              +--[16]        ";
+                        "                       |     \n" +
+                        "              +--[2 ]--+     \n" +
+                        "              |        |     \n" +
+                        "              |        +--[3]\n" +
+                        "              |              \n" +
+                        "     +--[4 ]--+              \n" +
+                        "     |        |              \n" +
+                        "     |        +--[5 ]--+     \n" +
+                        "     |                 |     \n" +
+                        "     |                 +--[6]\n" +
+                        "     |                       \n" +
+                        "[7]--+                       \n" +
+                        "     |                       \n" +
+                        "     |        +--[9 ]        \n" +
+                        "     |        |              \n" +
+                        "     +--[15]--+              \n" +
+                        "              |              \n" +
+                        "              +--[16]        ";
         assert(tree.getDiagram().equals(goodDiagram));
     }
 
@@ -226,14 +226,14 @@ class AVLTreeTest {
         System.out.println(tree.getDiagram());
         String goodDiagram =
                 "     +--[1]        \n" +
-                "     |             \n" +
-                "[2]--+             \n" +
-                "     |             \n" +
-                "     |       +--[3]\n" +
-                "     |       |     \n" +
-                "     +--[5]--+     \n" +
-                "             |     \n" +
-                "             +--[6]";
+                        "     |             \n" +
+                        "[2]--+             \n" +
+                        "     |             \n" +
+                        "     |       +--[3]\n" +
+                        "     |       |     \n" +
+                        "     +--[5]--+     \n" +
+                        "             |     \n" +
+                        "             +--[6]";
         assert(tree.getDiagram().equals(goodDiagram));
     }
 
@@ -248,24 +248,87 @@ class AVLTreeTest {
         System.out.println(tree.getDiagram());
         String goodDiagram =
                 "             +--[2]\n" +
-                "             |     \n" +
-                "     +--[3]--+     \n" +
-                "     |       |     \n" +
-                "     |       +--[4]\n" +
-                "     |             \n" +
-                "[5]--+             \n" +
-                "     |             \n" +
-                "     +--[6]        ";
+                        "             |     \n" +
+                        "     +--[3]--+     \n" +
+                        "     |       |     \n" +
+                        "     |       +--[4]\n" +
+                        "     |             \n" +
+                        "[5]--+             \n" +
+                        "     |             \n" +
+                        "     +--[6]        ";
         assert(tree.getDiagram().equals(goodDiagram));
     }
 
 
     @Test
     void deleteNode0() {
+        System.out.println(sampleTree.getDiagram());
+        System.out.println("________________________________________________");
+        boolean deleted = sampleTree.deleteNode(-10);
+        assert (deleted);
+
+        System.out.println(sampleTree.getDiagram());
+        System.out.println("________________________________________________");
+        sampleTree.deleteNode(5);
+        System.out.println(sampleTree.getDiagram());
+
+        System.out.println("________________________________________________");
+        sampleTree.deleteNode(-15);
+        System.out.println(sampleTree.getDiagram());
+        System.out.println(sampleTree.getDiagram());
     }
 
     @Test
     void deleteNode1() {
+        System.out.println(sampleTree.getDiagram());
+        System.out.println("________________________________________________");
+        boolean deleted = sampleTree.deleteNode(-10);
+        assert (deleted);
+
+        assert (sampleTree.getInOrder().size() == 9);
+
+        System.out.println(sampleTree.getDiagram());
+        System.out.println("________________________________________________");
+        sampleTree.deleteNode(5);
+        System.out.println(sampleTree.getDiagram());
+        assert (sampleTree.getInOrder().size() == 8);
+
+        System.out.println("________________________________________________");
+        sampleTree.deleteNode(13);
+        System.out.println(sampleTree.getDiagram());
+        assert (sampleTree.getInOrder().size() == 7);
+
+        System.out.println("________________________________________________");
+        sampleTree.deleteNode(23);
+        System.out.println(sampleTree.getDiagram());
+        assert (sampleTree.getInOrder().size() == 6);
+
+        System.out.println("________________________________________________");
+        sampleTree.deleteNode(20);
+        System.out.println(sampleTree.getDiagram());
+        assert (sampleTree.getInOrder().size() == 5);
+
+        System.out.println("________________________________________________");
+        sampleTree.deleteNode(30);
+        System.out.println(sampleTree.getDiagram());
+        assert (sampleTree.getInOrder().size() == 4);
+
+
+        System.out.println("________________________________________________");
+        sampleTree.deleteNode(-15);
+        System.out.println(sampleTree.getDiagram());
+        assert (sampleTree.getInOrder().size() == 3);
+
+        System.out.println("________________________________________________");
+        sampleTree.deleteNode(15);
+        System.out.println(sampleTree.getDiagram());
+        assert (sampleTree.getInOrder().size() == 2);
+
+        String goodDiagram =
+                "      +--[10]\n" +
+                "      |      \n" +
+                "[12]--+      ";
+        assert(sampleTree.getDiagram().equals(goodDiagram));
     }
 
     @Test

@@ -43,8 +43,18 @@ public class AVLTree extends BinarySearchTree implements Tree {
 
     protected AVLNode addRecursive(AVLNode node, int value, Boolean doTransitions) {
         /* 1.  Perform the normal BST insertion */
-        if (node == null)
-            return (new AVLNode(value));
+        if (node == null) {
+            AVLNode nodeToAdd = new AVLNode(value);
+            if (doTransitions) {
+                nodeToAdd.setMarked(true);
+            }
+            return (nodeToAdd);
+        }
+
+        if (doTransitions) {
+            node.setStacked(true);
+            addTransition(ADDING);
+        }
 
         if (value < node.getValue()) {
             final AVLNode left = addRecursive(node.getLeft(), value, doTransitions);
@@ -56,10 +66,12 @@ public class AVLTree extends BinarySearchTree implements Tree {
             return node;
 
         /* 2. Update height of this ancestor node */
-        int newHeight = 1 + Math.max(height(node.getLeft()),
-                height(node.getRight()));
+        final int leftHeight = height(node.getLeft());
+        final int rightHeight = height(node.getRight());
+        final int currentMaxHeight = Math.max(leftHeight,
+                rightHeight);
+        int newHeight = 1 + currentMaxHeight;
         node.setHeight(newHeight);
-
 
 
         /* 3. Get the balance factor of this ancestor
@@ -69,8 +81,13 @@ public class AVLTree extends BinarySearchTree implements Tree {
 
         // If this node becomes unbalanced, then there
         // are 4 cases Left Left Case
-        if (balance > 1 && value    < node.getLeft().getValue())
+        if (balance > 1 && value < node.getLeft().getValue()) {
+            if (doTransitions) {
+                node.setStacked(true);
+                addTransition(ADDING);
+            }
             return rightRotate(node);
+        }
 
         // Right Right Case
         if (balance < -1 && value > node.getRight().getValue())
@@ -97,10 +114,9 @@ public class AVLTree extends BinarySearchTree implements Tree {
     @Override
     public boolean deleteNode(int value) {
 
-        if (null != findNode(value, false)) {
+        if (null == findNode(value, false)) {
             return false;
             // todo give notice that value does not exist.
-            // Give transitions for search
         }
 
         root = deleteRec(root, value);
@@ -115,13 +131,17 @@ public class AVLTree extends BinarySearchTree implements Tree {
 
         // If the value to be deleted is smaller than
         // the root's value, then it lies in left subtree
-        if (value < root.getValue())
-            root.setLeft(deleteRec(root.getLeft(), value));
+        if (value < root.getValue()) {
+            final AVLNode left = deleteRec(root.getLeft(), value);
+            root.setLeft(left);
+        }
 
             // If the value to be deleted is greater than the
             // root's value, then it lies in right subtree
-        else if (value > root.getValue())
-            root.setRight(deleteRec(root.getRight(), value));
+        else if (value > root.getValue()) {
+            final AVLNode right = deleteRec(root.getRight(), value);
+            root.setRight(right);
+        }
 
             // if value is same as root's value, then this is the node
             // to be deleted
@@ -142,17 +162,21 @@ public class AVLTree extends BinarySearchTree implements Tree {
                 } else // One child case
                     root = temp; // Copy the contents of
                 // the non-empty child
+
+                System.out.println("TEST:");
+                System.out.println(getDiagram());
             } else {
 
                 // node with two children: Get the inorder
                 // successor (smallest in the right subtree)
-                Node temp = findMinNode(root.getRight());
+                AVLNode temp = findMinNode(root.getRight());
 
                 // Copy the inorder successor's data to this node
                 root.setValue(temp.getValue());
 
                 // Delete the inorder successor
-                root.setRight(deleteRec(root.getRight(), temp.getValue()));
+                final AVLNode right = deleteRec(root.getRight(), temp.getValue());
+                root.setRight(right);
             }
         }
 
@@ -161,7 +185,10 @@ public class AVLTree extends BinarySearchTree implements Tree {
             return root;
 
         // STEP 2: UPDATE HEIGHT OF THE CURRENT NODE
-        root.setHeight(Math.max(height(root.getLeft()), height(root.getRight())) + 1);
+        final int heightLeft = height(root.getLeft());
+        final int heightRight = height(root.getRight());
+        final int newHeight = Math.max(heightLeft, heightRight) + 1;
+        root.setHeight(newHeight);
 
         // STEP 3: GET THE BALANCE FACTOR OF THIS NODE (to check whether
         // this node became unbalanced)
@@ -174,7 +201,8 @@ public class AVLTree extends BinarySearchTree implements Tree {
 
         // Left Right Case
         if (balance > 1 && getBalance(root.getLeft()) < 0) {
-            root.setLeft(leftRotate(root.getLeft()));
+            final AVLNode left = leftRotate(root.getLeft());
+            root.setLeft(left);
             return rightRotate(root);
         }
 
@@ -184,7 +212,8 @@ public class AVLTree extends BinarySearchTree implements Tree {
 
         // Right Left Case
         if (balance < -1 && getBalance(root.getRight()) > 0) {
-            root.setRight(rightRotate(root.getRight()));
+            final AVLNode right = rightRotate(root.getRight());
+            root.setRight(right);
             return leftRotate(root);
         }
 
@@ -212,37 +241,52 @@ public class AVLTree extends BinarySearchTree implements Tree {
 
     // A utility function to right rotate subtree rooted with y
     private AVLNode rightRotate(AVLNode y) {
-        AVLNode x = (AVLNode) y.getLeft();
-        AVLNode T2 = (AVLNode) x.getRight();
+
+        AVLNode x = y.getLeft();
+        AVLNode T2 = x.getRight();
 
         // Perform rotation
         x.setRight(y);
         y.setLeft(T2);
 
+        tempTree = new AVLTree();
+
         // Update heights
-        y.setHeight(Math.max(height((AVLNode) y.getLeft()), height((AVLNode) y.getRight())) + 1);
-        x.setHeight(Math.max(height((AVLNode) x.getLeft()), height((AVLNode) x.getRight())) + 1);
+        countNewHeight(y, x);
 
         // Return new root
+        //setRoot(x);
         return x;
     }
 
     // A utility function to left rotate subtree rooted with x
     private AVLNode leftRotate(AVLNode x) {
-        AVLNode y = (AVLNode) x.getRight();
-        AVLNode T2 = (AVLNode) y.getLeft();
+        AVLNode y = x.getRight();
+        AVLNode T2 = y.getLeft();
 
         // Perform rotation
         y.setLeft(x);
         x.setRight(T2);
-
-        //  Update heights
-        x.setHeight(Math.max(height((AVLNode) x.getLeft()), height((AVLNode) x.getRight())) + 1);
-        y.setHeight(Math.max(height((AVLNode) y.getLeft()), height((AVLNode) y.getRight())) + 1);
+        countNewHeight(x, y);
 
         // Return new root
+        //setRoot(y);
         return y;
     }
+
+    private void countNewHeight(AVLNode x, AVLNode y) {
+        //  Update heights
+        final int heightLeftX = height(x.getLeft());
+        final int heightRightX = height(x.getRight());
+        final int newHeightX = Math.max(heightLeftX, heightRightX) + 1;
+        x.setHeight(newHeightX);
+
+        final int heightLeftY = height(y.getLeft());
+        final int heightRightY = height(y.getRight());
+        final int newHeightY = Math.max(heightLeftY, heightRightY) + 1;
+        y.setHeight(newHeightY);
+    }
+
 
     @Override
     public AVLNode getRoot(){
@@ -282,10 +326,26 @@ public class AVLTree extends BinarySearchTree implements Tree {
         return listToPopulate;
     }
 
+    public AVLNode findMinNode(AVLNode root) {
+        if (null == root) {
+            System.out.println("The tree is empty!");
+            return null;
+        }
+
+        AVLNode tempNode = root;
+        while (null != tempNode.getLeft()) {
+            tempNode.setStacked(true);
+            addTransition(FINDING_MIN);
+            tempNode = tempNode.getLeft();
+        }
+        return tempNode;
+    }
+
 
     @Override
     public String toString(){
-        return super.toString();
+        return getDiagram();
+        //return super.toString();
     }
 
     @Override

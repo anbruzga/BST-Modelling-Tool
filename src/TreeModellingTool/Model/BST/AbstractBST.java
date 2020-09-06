@@ -410,6 +410,9 @@ public abstract class AbstractBST implements Tree {
         }
     }
 
+    public void setRoot(Node root){
+        this.root = root;
+    }
 
     // Modified version of work by "eirikhalvard" at
     // https://github.com/eirikhalvard ,
