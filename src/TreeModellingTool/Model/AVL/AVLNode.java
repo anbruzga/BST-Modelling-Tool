@@ -11,7 +11,8 @@ public class AVLNode implements Node {
     private AVLNode right; // right child
     private boolean marked;
     private boolean stacked;
-    private int height = 1;
+    private int height;
+    private int bf;
 
     public AVLNode(int value) {
         this.value = value;
@@ -65,6 +66,14 @@ public class AVLNode implements Node {
 
     public void setRight(AVLNode right){
         this.right = right;
+    }
+
+    public int getBf() {
+        return bf;
+    }
+
+    public void setBf(int bf) {
+        this.bf = bf;
     }
 
     @Override
