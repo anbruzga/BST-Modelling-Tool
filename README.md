@@ -1,5 +1,9 @@
-# BST-Modelling-Tool
-Create and modify binary search tree, visualise the changes step by step
+# Tree-Modelling-Tool
+Create and modify, tree data structures, visualise the changes step by step
+
+## Currently in progress:
+1. AVL Tree rebalancing step by step
+2. Red Black Tree
 
 
 ## Installation:
