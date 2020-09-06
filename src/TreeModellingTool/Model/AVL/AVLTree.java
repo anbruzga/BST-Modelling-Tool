@@ -74,6 +74,12 @@ public class AVLTree extends BinarySearchTree implements Tree {
 
     }
 
+    @Override
+    public void addNode(Node node, boolean doTransitions) {
+        int value = node.getValue();
+        addNode(value, doTransitions);
+    }
+
     // Insert/add a value to the AVL tree. The value must not be null, O(log(n))
     @Override
     public void addNode(int value, boolean doTransitions){
@@ -81,6 +87,10 @@ public class AVLTree extends BinarySearchTree implements Tree {
             root = addRecursive(root, value, doTransitions);
             nodeCount++;
             super.root = this.root;
+            if (doTransitions) {
+                addTransition(ADDING);
+                traverseAll(root, true, true);
+            }
         }
     }
 
@@ -88,7 +98,18 @@ public class AVLTree extends BinarySearchTree implements Tree {
     private AVLNode addRecursive(AVLNode node, int value, boolean doTransitions) {
 
         // Base case.
-        if (node == null) return new AVLNode(value);
+        if (node == null) {
+            AVLNode newNode = new AVLNode(value);
+            if (doTransitions) {
+                newNode.setMarked(true);
+            }
+            return newNode;
+        }
+
+        if (doTransitions) {
+            node.setStacked(true);
+            addTransition(ADDING);
+        }
 
         // Compare current value to the value in the node.
         int cmp = compareTo(value, node.getValue());
@@ -199,9 +220,13 @@ public class AVLTree extends BinarySearchTree implements Tree {
     public boolean deleteNode(int elem) {
 
         if (contains(root, elem)) {
-            root = remove(root, elem);
+            root = deleteRec(root, elem);
             nodeCount--;
             super.root = this.root;
+
+            addTransition(DELETING);
+            traverseAll(root, true, true);
+
             return true;
         }
 
@@ -209,24 +234,30 @@ public class AVLTree extends BinarySearchTree implements Tree {
     }
 
     // Removes a value from the AVL tree.
-    private AVLNode remove(AVLNode node, int elem) {
+    private AVLNode deleteRec(AVLNode node, int elem) {
 
         if (node == null) return null;
+
+        node.setStacked(true);
+        addTransition(DELETING);
 
         int cmp = compareTo(elem, node.getValue());
 
         // Dig into left subtree, the value we're looking
         // for is smaller than the current value.
         if (cmp < 0) {
-            node.setLeft(remove(node.getLeft(), elem));
+            node.setLeft(deleteRec(node.getLeft(), elem));
 
             // Dig into right subtree, the value we're looking
             // for is greater than the current value.
         } else if (cmp > 0) {
-            node.setRight(remove(node.getRight(), elem));
+            node.setRight(deleteRec(node.getRight(), elem));
 
             // Found the node we wish to remove.
         } else {
+
+            node.setMarked(true);
+            addTransition(DELETING);
 
             // This is the case with only a right subtree or no subtree at all.
             // In this situation just swap the node we wish to remove
@@ -255,7 +286,7 @@ public class AVLTree extends BinarySearchTree implements Tree {
                     node.setValue(successorValue);
 
                     // Find the largest node in the left subtree.
-                    node.setLeft(remove(node.getLeft(), successorValue));
+                    node.setLeft(deleteRec(node.getLeft(), successorValue));
 
                 } else {
 
@@ -266,7 +297,7 @@ public class AVLTree extends BinarySearchTree implements Tree {
                     // Go into the right subtree and remove the leftmost node we
                     // found and swapped data with. This prevents us from having
                     // two nodes in our tree with the same value.
-                    node.setRight(remove(node.getRight(), successorValue));
+                    node.setRight(deleteRec(node.getRight(), successorValue));
                 }
             }
         }

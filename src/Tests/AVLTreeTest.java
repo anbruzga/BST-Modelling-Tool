@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLOutput;
+import java.util.LinkedList;
 import java.util.List;
 
 class AVLTreeTest {
@@ -46,8 +47,9 @@ class AVLTreeTest {
                         "      +--[25]--+      \n" +
                         "               |      \n" +
                         "               +--[33]";
-        assert(tree.getDiagram().equals(goodDiagram));
         System.out.println(tree.getDiagram());
+        assert(tree.getDiagram().equals(goodDiagram));
+
     }
 
     @Test
@@ -284,7 +286,6 @@ class AVLTreeTest {
         System.out.println("________________________________________________");
         boolean deleted = sampleTree.deleteNode(-10);
         assert (deleted);
-
         assert (sampleTree.getInOrder().size() == 9);
 
         System.out.println(sampleTree.getDiagram());
@@ -331,29 +332,10 @@ class AVLTreeTest {
         assert(sampleTree.getDiagram().equals(goodDiagram));
     }
 
-    @Test
-    void deleteNode2() {
-    }
-
-    @Test
-    void deleteNode3() {
-    }
-
-    @Test
-    void deleteNode4() {
-    }
-
-    @Test
-    void deleteNode5() {
-    }
-
-    @Test
-    void deleteNode6() {
-    }
-
-
 
     @Test
     void deepCopy() {
     }
+
+
 }

@@ -1,8 +1,12 @@
 package TreeModellingTool.Controller;
 
+import TreeModellingTool.Model.AVL.AVLTree;
 import TreeModellingTool.Model.BST.BinarySearchTree;
 import TreeModellingTool.Model.Node;
+import TreeModellingTool.Model.RedBlack.RedBlackTree;
 import TreeModellingTool.Model.Transitions;
+import TreeModellingTool.Model.Tree;
+import TreeModellingTool.View.HintTextField;
 
 import javax.swing.*;
 import javax.swing.text.DefaultHighlighter;
@@ -10,6 +14,8 @@ import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class TreeViewController {
@@ -38,20 +44,29 @@ public class TreeViewController {
     private JTextField maxValueTextField;
     private JLabel transitionNameLabel;
     private JLabel transitionsLabel;
+    private JRadioButton BstRadioBtn;
+    private JRadioButton AvlRadioBtn;
+    private JRadioButton RedBlackRadioBtn;
 
-    private BinarySearchTree tree = new BinarySearchTree();
+
+    private Tree tree = new BinarySearchTree();
     private static int originalDiagramFontSize;
 
     private final Highlighter.HighlightPainter highlightStacked = new MyHighlightPainter(Color.yellow);
     private final Highlighter.HighlightPainter highlightMarked = new MyHighlightPainter(Color.red);
 
     public TreeViewController() {
-        JFrame frame = new JFrame("Binary Search Tree Modelling Tool");
+        JFrame frame = new JFrame("Binary Search Trees Modelling Tool");
         frame.setContentPane(panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         makeFrameFullSize(frame);
         //frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(BstRadioBtn);
+        group.add(AvlRadioBtn);
+        group.add(RedBlackRadioBtn);
 
 
         originalDiagramFontSize = textArea.getFont().getSize();
@@ -59,7 +74,7 @@ public class TreeViewController {
         randTreeBtn.addActionListener(e -> {
             Transitions.clear();
             try{
-                tree = createRandomBST();
+                tree = createRandomTree();
             }
             catch(NumberFormatException ex){
                 displayNumberFormatException();
@@ -73,13 +88,6 @@ public class TreeViewController {
             updateDiagram();
             updateTransitionName();
         });
-
-        /* Deleted button
-        printTreeBtn.addActionListener(e -> {
-            updateDiagram();
-            Transitions.visitLast();
-        });
-        */
 
         inorderBtn.addActionListener(e -> {
             tree.getInOrder();
@@ -111,12 +119,6 @@ public class TreeViewController {
             updateTransitionName();
         });
 
-        /*printAllBtn.addActionListener(e -> {
-            String allNodesStr = tree.printAllNodes();
-            changeTextArea(allNodesStr);
-            updateTransitionName();
-        });
-*/
         addNodeBtn.addActionListener(e -> {
             getNodeToAdd();
             updateDiagram();
@@ -169,6 +171,34 @@ public class TreeViewController {
 
         transitionFastBackwardBtn.addActionListener(e -> {
 
+        });
+
+        // Checkboxes:
+        AvlRadioBtn.addActionListener(e -> {
+            if (!(tree instanceof AVLTree)) { // not to start a new tree if is already selected
+                tree = new AVLTree();
+                Transitions.clear();
+                textArea.setText("");
+                balanceTreeBtn.setEnabled(false);
+            }
+        });
+
+        BstRadioBtn.addActionListener(e -> {
+            if (!(tree instanceof BinarySearchTree)) {
+                tree = new BinarySearchTree();
+                Transitions.clear();
+                textArea.setText("");
+                balanceTreeBtn.setEnabled(true);
+            }
+        });
+
+        RedBlackRadioBtn.addActionListener(e -> {
+            if (!(tree instanceof RedBlackTree)) {
+                tree = new RedBlackTree();
+                Transitions.clear();
+                textArea.setText("");
+                balanceTreeBtn.setEnabled(false);
+            }
         });
     }
 
@@ -285,9 +315,18 @@ public class TreeViewController {
 
     // this method quickly creates a random BST.
     // It could ask the user input for numbers used, though I sometimes use it for manual testing
-    private BinarySearchTree createRandomBST() throws NumberFormatException {
+    private Tree createRandomTree() throws NumberFormatException {
 
-        BinarySearchTree randTree = new BinarySearchTree();
+        Tree randTree;
+        if (AvlRadioBtn.isSelected()){
+            randTree = new AVLTree();
+        }
+        else if (BstRadioBtn.isSelected()) {
+            randTree = new BinarySearchTree();
+        }
+        else {
+            randTree = new RedBlackTree();
+        }
 
         int nodesMinAmountDefault = 5;
         int nodesMaxAmountDefault = 20 + nodesMinAmountDefault;
@@ -426,7 +465,9 @@ public class TreeViewController {
     }
 
     private void createUIComponents() {
-        // TODO: place custom component creation code here
+        maxValueTextField = new HintTextField("default: 50");
+        minValueTextField = new HintTextField("default: -50");
+        nodesAmountTextField = new HintTextField("default: random from [5, 25]");
     }
 
     private static class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter{
