@@ -1,4 +1,4 @@
-package BST_Tool.Model;
+package TreeModellingTool.Model;
 
 import java.util.List;
 

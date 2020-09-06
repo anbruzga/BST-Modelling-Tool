@@ -1,4 +1,4 @@
-package BST_Tool.Controller;
+package TreeModellingTool.Controller;
 
 public class Main {
 

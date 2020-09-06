@@ -1,7 +1,7 @@
-import BST_Tool.Model.BST.BSTNode;
-import BST_Tool.Model.BST.BinarySearchTree;
-import BST_Tool.Model.Node;
-import BST_Tool.Model.Tree;
+import TreeModellingTool.Model.BST.BSTNode;
+import TreeModellingTool.Model.BST.BinarySearchTree;
+import TreeModellingTool.Model.Node;
+import TreeModellingTool.Model.Tree;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.LinkedList;

@@ -1,6 +1,4 @@
-package BST_Tool.Model;
-
-import BST_Tool.Model.BST.BSTNode;
+package TreeModellingTool.Model;
 
 public interface Node {
     // GETTERS SETTERS
@@ -8,11 +6,11 @@ public interface Node {
 
     void setValue(int value);
 
-    BSTNode getLeft();
+    Node getLeft();
 
     void setLeft(Node left);
 
-    BSTNode getRight();
+    Node getRight();
 
     void setRight(Node right);
 

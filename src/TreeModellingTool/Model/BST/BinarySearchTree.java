@@ -1,8 +1,8 @@
-package BST_Tool.Model.BST;
+package TreeModellingTool.Model.BST;
 
 
-import BST_Tool.Model.Node;
-import BST_Tool.Model.Tree;
+import TreeModellingTool.Model.Node;
+import TreeModellingTool.Model.Tree;
 
 import java.util.List;
 
@@ -91,7 +91,6 @@ public class BinarySearchTree extends AbstractBST implements Tree {
         return root;
     }
 
-    @Override
     protected Node addRecursive(Node current, int value, Boolean doTransitions) {
 
         if (current == null) {

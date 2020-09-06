@@ -1,14 +1,14 @@
-package BST_Tool.Model.BST;
+package TreeModellingTool.Model.BST;
 
 
-import BST_Tool.Model.Node;
+import TreeModellingTool.Model.Node;
 
 public class BSTNode implements Node {
 
     // VARIABLES
     private int value; // node data
-    private BSTNode left; // left child
-    private BSTNode right; // right child
+    private Node left; // left child
+    private Node right; // right child
     private boolean marked;
     private boolean stacked;
 
@@ -32,17 +32,17 @@ public class BSTNode implements Node {
     }
 
     @Override
-    public BSTNode getLeft() {
+    public Node getLeft() {
         return left;
     }
 
     @Override
     public void setLeft(Node left) {
-        this.left = (BSTNode) left;
+        this.left = left;
     }
 
     @Override
-    public BSTNode getRight() {
+    public Node getRight() {
         return right;
     }
 

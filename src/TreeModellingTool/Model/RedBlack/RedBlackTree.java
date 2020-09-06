@@ -1,16 +1,20 @@
-package BST_Tool.Model.RedBlack;
+package TreeModellingTool.Model.RedBlack;
 
-import BST_Tool.Model.BST.AbstractBST;
-import BST_Tool.Model.Node;
-import BST_Tool.Model.Tree;
+import TreeModellingTool.Model.BST.AbstractBST;
+import TreeModellingTool.Model.Node;
+import TreeModellingTool.Model.Tree;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class RedBlackTree extends AbstractBST implements Tree {
 
+    // TODO:
+    // Implement all the methods
 
     private final String IDENTIFIER = "RBT";
 
     public RedBlackTree(){
         super.identifier = IDENTIFIER;
+        throw new NotImplementedException();
     }
 
     @Override
@@ -23,7 +27,6 @@ public class RedBlackTree extends AbstractBST implements Tree {
         return null;
     }
 
-    @Override
     protected Node addRecursive(Node current, int value, Boolean doTransitions) {
         return null;
     }

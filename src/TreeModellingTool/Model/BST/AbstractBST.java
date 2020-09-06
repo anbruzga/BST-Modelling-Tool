@@ -1,12 +1,12 @@
-package BST_Tool.Model.BST;
+package TreeModellingTool.Model.BST;
 
-import BST_Tool.Model.AVL.AVLNode;
-import BST_Tool.Model.AVL.AVLTree;
-import BST_Tool.Model.Node;
-import BST_Tool.Model.RedBlack.RedBlackNode;
-import BST_Tool.Model.RedBlack.RedBlackTree;
-import BST_Tool.Model.Transitions;
-import BST_Tool.Model.Tree;
+import TreeModellingTool.Model.AVL.AVLNode;
+import TreeModellingTool.Model.AVL.AVLTree;
+import TreeModellingTool.Model.Node;
+import TreeModellingTool.Model.RedBlack.RedBlackNode;
+import TreeModellingTool.Model.RedBlack.RedBlackTree;
+import TreeModellingTool.Model.Transitions;
+import TreeModellingTool.Model.Tree;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -165,7 +165,6 @@ public abstract class AbstractBST implements Tree {
 
     protected abstract Node deleteRec(Node root, int value);
 
-    @Override
     public Node getRoot() {
         return root;
     }
@@ -374,8 +373,6 @@ public abstract class AbstractBST implements Tree {
 
         return listToPopulate;
     }
-
-    protected abstract Node addRecursive(Node current, int value, Boolean doTransitions);
 
     protected void addTransition(String name) {
         TreeString ts = new TreeString();

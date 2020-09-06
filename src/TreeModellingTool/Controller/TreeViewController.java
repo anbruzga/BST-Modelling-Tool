@@ -1,8 +1,8 @@
-package BST_Tool.Controller;
+package TreeModellingTool.Controller;
 
-import BST_Tool.Model.BST.BinarySearchTree;
-import BST_Tool.Model.Node;
-import BST_Tool.Model.Transitions;
+import TreeModellingTool.Model.BST.BinarySearchTree;
+import TreeModellingTool.Model.Node;
+import TreeModellingTool.Model.Transitions;
 
 import javax.swing.*;
 import javax.swing.text.DefaultHighlighter;

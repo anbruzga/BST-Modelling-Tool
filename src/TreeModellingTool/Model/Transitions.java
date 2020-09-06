@@ -1,7 +1,5 @@
-package BST_Tool.Model;
+package TreeModellingTool.Model;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
