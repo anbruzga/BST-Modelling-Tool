@@ -15,14 +15,14 @@ import java.util.Objects;
 
 public abstract class AbstractBST implements Tree {
 
-    protected final String ADDING = "Adding Node";
-    protected final String DELETING = "Deleting Node";
-    protected final String FINDING = "Finding Node";
-    protected final String FINDING_MIN = "Finding Min";
-    protected final String FINDING_MAX = "Finding Max";
-    protected final String INORDER = "Inorder Traversal";
-    protected final String PREORDER = "Preorder Traversal";
-    protected final String POSTORDER = "Postorder Traversal";
+    protected final String ADDING = "Add Node";
+    protected final String DELETING = "Delete Node";
+    protected final String FINDING = "Find Node";
+    protected final String FINDING_MIN = "Find Min";
+    protected final String FINDING_MAX = "Find Max";
+    protected final String INORDER = "Inorder";
+    protected final String PREORDER = "Preorder";
+    protected final String POSTORDER = "Postorder";
     protected Node root;
     protected Tree tempTree;
     protected String identifier;

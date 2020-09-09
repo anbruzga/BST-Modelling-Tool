@@ -84,52 +84,63 @@ public class TreeViewController {
         });
 
         balanceTreeBtn.addActionListener(e -> {
+            Transitions.visitLast();
             tree.balanceTree();
             updateDiagram();
             updateTransitionName();
         });
 
         inorderBtn.addActionListener(e -> {
+            Transitions.visitLast();
             tree.getInOrder();
             updateDiagram();
             updateTransitionName();
         });
 
         preOrderBtn.addActionListener(e -> {
+            Transitions.visitLast();
             tree.getPreOrder(true);
             updateDiagram();
             updateTransitionName();
         });
 
         postOrderBtn.addActionListener(e -> {
+            Transitions.visitLast();
             tree.getPostOrder();
             updateDiagram();
             updateTransitionName();
         });
 
         minNodeBtn.addActionListener(e -> {
+            Transitions.visitLast();
             tree.showMinNode();
             updateDiagram();
             updateTransitionName();
         });
 
         maxNodeBtn.addActionListener(e -> {
+            Transitions.visitLast();
             tree.showMaxNode();
             updateDiagram();
             updateTransitionName();
         });
 
         addNodeBtn.addActionListener(e -> {
+            Transitions.visitLast();
             getNodeToAdd();
             updateDiagram();
         });
 
         findNodeBtn.addActionListener(e -> {
+            Transitions.visitLast();
             getNodeToFind();
             updateDiagram();
         });
 
-        delNodeBtn.addActionListener(e -> getNodeToDelete());
+        delNodeBtn.addActionListener(e -> {
+            Transitions.visitLast();
+            getNodeToDelete();
+        });
 
         deleteAllNodesButton.addActionListener(e -> {
             Transitions.clear();
