@@ -184,7 +184,7 @@ public class TreeViewController {
         });
 
         BstRadioBtn.addActionListener(e -> {
-            if (!(tree instanceof BinarySearchTree)) {
+            if (!(tree.getIdentifier().equals("bst"))) {
                 tree = new BinarySearchTree();
                 Transitions.clear();
                 textArea.setText("");

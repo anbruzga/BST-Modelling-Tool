@@ -153,4 +153,9 @@ public class BinarySearchTree extends AbstractBST implements Tree {
         return newTree;
     }
 
+    @Override
+    public String getIdentifier() {
+        return identifier;
+    }
+
 }

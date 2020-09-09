@@ -46,5 +46,5 @@ public interface Tree {
 
     String printAllNodes();
 
-
+    String getIdentifier();
 }

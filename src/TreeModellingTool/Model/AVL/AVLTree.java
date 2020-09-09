@@ -198,20 +198,25 @@ public class AVLTree extends BinarySearchTree implements Tree {
     }
 
     private AVLNode leftRotation(AVLNode node) {
+        addTransition("Left Rotation");
         AVLNode newParent = node.getRight();
         node.setRight(newParent.getLeft());
         newParent.setLeft( node);
         update(node);
         update(newParent);
+        addTransition("Left Rotation");
         return newParent;
     }
 
     private AVLNode rightRotation(AVLNode node) {
+        addTransition("Right Rotation");
         AVLNode newParent = node.getLeft();
+
         node.setLeft(newParent.getRight());
         newParent.setRight(node);
         update(node);
         update(newParent);
+        addTransition("Right Rotation");
         return newParent;
     }
 
@@ -324,5 +329,8 @@ public class AVLTree extends BinarySearchTree implements Tree {
         return node.getValue();
     }
 
-
+    @Override
+    public String getIdentifier() {
+        return identifier;
+    }
 }

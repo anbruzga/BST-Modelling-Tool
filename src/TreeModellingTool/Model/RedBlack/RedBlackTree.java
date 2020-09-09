@@ -50,4 +50,9 @@ public class RedBlackTree extends AbstractBST implements Tree {
     public Tree deepCopy(Tree toCopy) {
         return null;
     }
+
+    @Override
+    public String getIdentifier() {
+        return identifier;
+    }
 }
