@@ -9,7 +9,7 @@ Create and modify, tree data structures, visualise the changes step by step
 ## Installation:
 There is an BST-Tool.jar artifact attached in releases. JRE that supports at least Java 8 is needed to run it (v. 251).
 
-![alt text](screenshot.png)
+![alt text](screenshot1.png)
 
 ## Usage:
 
