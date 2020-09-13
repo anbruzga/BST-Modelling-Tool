@@ -104,6 +104,7 @@ public class Transitions {
         transitions = new LinkedList<>();
         markedNodes = new LinkedList<>();
         stackedNodes = new LinkedList<>();
+        transitionNames = new LinkedList<>();
         lastVisited = 0;
 
     }
@@ -148,6 +149,9 @@ public class Transitions {
     }
 
     public static String getTransitionName() {
+        if (lastVisited > transitionNames.size()-1){
+            return null;
+        }
         return transitionNames.get(lastVisited);
     }
 

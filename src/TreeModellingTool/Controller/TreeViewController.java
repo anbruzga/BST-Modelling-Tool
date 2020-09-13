@@ -129,17 +129,20 @@ public class TreeViewController {
             Transitions.visitLast();
             getNodeToAdd();
             updateDiagram();
+            updateTransitionName();
         });
 
         findNodeBtn.addActionListener(e -> {
             Transitions.visitLast();
             getNodeToFind();
             updateDiagram();
+            updateTransitionName();
         });
 
         delNodeBtn.addActionListener(e -> {
             Transitions.visitLast();
             getNodeToDelete();
+            updateTransitionName();
         });
 
         deleteAllNodesButton.addActionListener(e -> {
@@ -276,6 +279,9 @@ public class TreeViewController {
 
     private void updateTransitionName() {
         String transitionName = Transitions.getTransitionName();
+        if (transitionName == null){
+            transitionNameLabel.setText("");
+        }
         transitionNameLabel.setText(transitionName);
     }
 
