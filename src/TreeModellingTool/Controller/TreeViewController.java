@@ -7,6 +7,7 @@ import TreeModellingTool.Model.RedBlack.RedBlackTree;
 import TreeModellingTool.Model.Transitions;
 import TreeModellingTool.Model.Tree;
 import TreeModellingTool.View.HintTextField;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.swing.*;
 import javax.swing.text.DefaultHighlighter;
@@ -14,9 +15,8 @@ import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TreeViewController {
     private JPanel panel1;
@@ -53,7 +53,7 @@ public class TreeViewController {
     private static int originalDiagramFontSize;
 
     private final Highlighter.HighlightPainter highlightStacked = new MyHighlightPainter(Color.yellow);
-    private final Highlighter.HighlightPainter highlightMarked = new MyHighlightPainter(Color.red);
+    private final Highlighter.HighlightPainter highlightMarked = new MyHighlightPainter(Color.orange);
 
     public TreeViewController() {
         JFrame frame = new JFrame("Binary Search Trees Modelling Tool");
@@ -177,40 +177,101 @@ public class TreeViewController {
         });
 
         transitionFastForwardBtn.addActionListener(e -> {
-
+            throw new NotImplementedException();
         });
 
         transitionFastBackwardBtn.addActionListener(e -> {
-
+            throw new NotImplementedException();
         });
 
         // Checkboxes:
         AvlRadioBtn.addActionListener(e -> {
             if (!(tree instanceof AVLTree)) { // not to start a new tree if is already selected
-                tree = new AVLTree();
-                Transitions.clear();
-                textArea.setText("");
-                balanceTreeBtn.setEnabled(false);
+                // if the tree is note empty
+                if ( !tree.getInOrder().isEmpty()) {
+                    //Inform user that he is about to lose previous tree data
+                    boolean agreesToChange = changingNonEmptyTreeTypeMsg();
+                    if (agreesToChange) {
+                        createNewAvlTree();
+                    }
+                    else reselectPreviousRadioButton();
+                }
+                else { // if tree was empty, change without asking informing about data loss
+                    createNewAvlTree();
+                }
             }
         });
 
         BstRadioBtn.addActionListener(e -> {
-            if (!(tree.getIdentifier().equals("bst"))) {
-                tree = new BinarySearchTree();
-                Transitions.clear();
-                textArea.setText("");
-                balanceTreeBtn.setEnabled(true);
+            // identifier is used because the other trees are children
+            if (!(tree.getIdentifier().equals("BST"))) {
+                // if the tree is note empty
+                if ( !tree.getInOrder().isEmpty()) {
+                    //Inform user that he is about to lose previous tree data
+                    boolean agreesToChange = changingNonEmptyTreeTypeMsg();
+                    if (agreesToChange) {
+                        createNewBst();
+                    }
+                    else reselectPreviousRadioButton();
+                }
+                else { // if tree was empty, change without asking informing about data loss
+                    createNewBst();
+                }
             }
         });
 
         RedBlackRadioBtn.addActionListener(e -> {
             if (!(tree instanceof RedBlackTree)) {
-                tree = new RedBlackTree();
-                Transitions.clear();
-                textArea.setText("");
-                balanceTreeBtn.setEnabled(false);
+                // if the tree is note empty
+                if ( !tree.getInOrder().isEmpty()) {
+                    //Inform user that he is about to lose previous tree data
+                    boolean agreesToChange = changingNonEmptyTreeTypeMsg();
+                    if (agreesToChange) {
+                        createNewRedBlack();
+                    }
+                    else reselectPreviousRadioButton();
+                }
+                else { // if tree was empty, change without asking informing about data loss
+                    createNewRedBlack();
+                }
             }
         });
+    }
+
+    private void reselectPreviousRadioButton() {
+        if (tree.getIdentifier().equals("BST")){
+            BstRadioBtn.setSelected(true);
+        }
+        else if (tree.getIdentifier().equals("AVL")){
+            BstRadioBtn.setSelected(true);
+        }
+        else if (tree.getIdentifier().equals("RBT")){
+            BstRadioBtn.setSelected(true);
+        }
+    }
+
+    private void createNewRedBlack() {
+        tree = new RedBlackTree();
+        Transitions.clear();
+        textArea.setText("");
+        transitionNameLabel.setText("");
+        balanceTreeBtn.setEnabled(false);
+    }
+
+    private void createNewBst() {
+        tree = new BinarySearchTree();
+        Transitions.clear();
+        textArea.setText("");
+        transitionNameLabel.setText("");
+        balanceTreeBtn.setEnabled(true);
+    }
+
+    private void createNewAvlTree() {
+        tree = new AVLTree();
+        Transitions.clear();
+        textArea.setText("");
+        transitionNameLabel.setText("");
+        balanceTreeBtn.setEnabled(false);
     }
 
     private void updateTransitionName() {
@@ -263,6 +324,15 @@ public class TreeViewController {
     private void displayValueMissingErrorMsg(int value) {
         String msg = "The tree does not have the value: " + value;
         JOptionPane.showMessageDialog(null,msg);
+    }
+
+    private boolean changingNonEmptyTreeTypeMsg() {
+        String msg = "The current tree data will be lost upon selecting option Yes.";
+        int selected = JOptionPane.showConfirmDialog(null,msg);
+        if(selected == JOptionPane.YES_OPTION){
+            return true;
+        }
+        else return false;
     }
 
     private boolean addNode(String value) {
@@ -480,6 +550,8 @@ public class TreeViewController {
         minValueTextField = new HintTextField("default: -50");
         nodesAmountTextField = new HintTextField("default: random from [5, 25]");
     }
+
+
 
     private static class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter{
 

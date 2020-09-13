@@ -139,6 +139,7 @@ public class Transitions {
     }
 
     public static String getLastTransition(){
+        lastVisited = transitions.size() -1;
         return transitions.get(lastVisited);
     }
 
