@@ -2,7 +2,7 @@
   <artifact type="jar" name="BST:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/BST_jar</output-path>
     <root id="archive" name="BST.jar">
-      <element id="module-output" name="BST" />
+      <element id="module-output" name="Tree-Modelling-Tool" />
     </root>
   </artifact>
 </component>

@@ -235,9 +235,6 @@ public abstract class AbstractBST implements Tree {
         return node;
     }
 
-
-    // IntelliJ fails to see that name is changed by subclasses,
-    // therefore do not listen to IntelliJ "error"
     protected void addTransition(Tree tree, String name) {
         String diagram = tree.getDiagram(tree);
         Transitions.add(diagram, name);

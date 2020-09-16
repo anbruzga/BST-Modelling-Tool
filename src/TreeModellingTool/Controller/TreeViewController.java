@@ -50,26 +50,17 @@ public class TreeViewController {
     private Tree tree = new BinarySearchTree();
     private static int originalDiagramFontSize;
 
-    private final Highlighter.HighlightPainter highlightStacked = new MyHighlightPainter(Color.yellow);
-    private final Highlighter.HighlightPainter highlightMarked = new MyHighlightPainter(Color.orange);
-    private final Highlighter.HighlightPainter highlightRed = new MyHighlightPainter(Color.red);
-    private final Highlighter.HighlightPainter highlightBlack = new MyHighlightPainter(Color.gray);
+    private final Highlighter.HighlightPainter highlighterStacked = new MyHighlightPainter(Color.yellow);
+    private final Highlighter.HighlightPainter highlighterMarked = new MyHighlightPainter(Color.orange);
+    private final Highlighter.HighlightPainter highlighterRed = new MyHighlightPainter(Color.red);
+    private final Highlighter.HighlightPainter highlighterBlack = new MyHighlightPainter(Color.gray);
 
     public TreeViewController() {
-        JFrame frame = new JFrame("Tree Data Structures Modelling Tool");
-        frame.setContentPane(panel1);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        makeFrameFullSize(frame);
-        //frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
 
-        ButtonGroup group = new ButtonGroup();
-        group.add(BstRadioBtn);
-        group.add(AvlRadioBtn);
-        group.add(RedBlackRadioBtn);
+        initializeFrameParameters();
+        createRadioButtonGroup();
 
 
-        originalDiagramFontSize = textArea.getFont().getSize();
 
         randTreeBtn.addActionListener(e -> {
             Transitions.clear();
@@ -79,56 +70,56 @@ public class TreeViewController {
             catch(NumberFormatException ex){
                 displayNumberFormatException();
             }
-            UpdateTransitionAndDiagram();
+            updateTransitionAndDiagram();
         });
 
         balanceTreeBtn.addActionListener(e -> {
             Transitions.visitLast();
             tree.balanceTree();
-            UpdateTransitionAndDiagram();
+            updateTransitionAndDiagram();
 
         });
 
         inorderBtn.addActionListener(e -> {
             Transitions.visitLast();
             tree.getInOrder();
-            UpdateTransitionAndDiagram();
+            updateTransitionAndDiagram();
         });
 
         preOrderBtn.addActionListener(e -> {
             Transitions.visitLast();
             tree.getPreOrder(true);
-            UpdateTransitionAndDiagram();
+            updateTransitionAndDiagram();
         });
 
         postOrderBtn.addActionListener(e -> {
             Transitions.visitLast();
             tree.getPostOrder();
-            UpdateTransitionAndDiagram();
+            updateTransitionAndDiagram();
         });
 
         minNodeBtn.addActionListener(e -> {
             Transitions.visitLast();
             tree.showMinNode();
-            UpdateTransitionAndDiagram();
+            updateTransitionAndDiagram();
         });
 
         maxNodeBtn.addActionListener(e -> {
             Transitions.visitLast();
             tree.showMaxNode();
-            UpdateTransitionAndDiagram();
+            updateTransitionAndDiagram();
         });
 
         addNodeBtn.addActionListener(e -> {
             Transitions.visitLast();
             getNodeToAdd();
-            UpdateTransitionAndDiagram();
+            updateTransitionAndDiagram();
         });
 
         findNodeBtn.addActionListener(e -> {
             Transitions.visitLast();
             getNodeToFind();
-            UpdateTransitionAndDiagram();
+            updateTransitionAndDiagram();
         });
 
         delNodeBtn.addActionListener(e -> {
@@ -249,7 +240,25 @@ public class TreeViewController {
         });
     }
 
-    private void UpdateTransitionAndDiagram() {
+    private void initializeFrameParameters() {
+        JFrame frame = new JFrame("Tree Data Structures Modelling Tool");
+        frame.setContentPane(panel1);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        makeFrameFullSize(frame);
+        frame.setVisible(true);
+
+        // saving font size for increasing/decreasing
+        originalDiagramFontSize = textArea.getFont().getSize();
+    }
+
+    private void createRadioButtonGroup() {
+        ButtonGroup group = new ButtonGroup();
+        group.add(BstRadioBtn);
+        group.add(AvlRadioBtn);
+        group.add(RedBlackRadioBtn);
+    }
+
+    private void updateTransitionAndDiagram() {
         // order is important for painting, as in Red Black tree it will check whether to show the algorithm
         // or red-blackness of the tree depending on the transition name
         updateTransitionName();
@@ -270,6 +279,7 @@ public class TreeViewController {
         }
         return tree;
     }
+
     private void reselectPreviousRadioButton() {
         switch (tree.getIdentifier()) {
             case "BST":
@@ -315,18 +325,6 @@ public class TreeViewController {
         }
         transitionNameLabel.setText(transitionName);
     }
-
-   /* private void resizeFont(Dimension originalWindowSize) {
-        Dimension newSize = panel1.getSize();
-        // according to proportion:
-        // 20 (originalDiagramFontSize) - (originalWindowSize)
-        // x                            - (newSize)
-        int x = (int) (originalDiagramFontSize * newSize.getHeight() / originalWindowSize.getHeight());
-
-        textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, x));
-    }
-
-    */
 
 
     private void makeFrameFullSize(JFrame frame) {
@@ -436,24 +434,20 @@ public class TreeViewController {
     }
 
 
-    // this method quickly creates a random BST.
-    // It could ask the user input for numbers used, though I sometimes use it for manual testing
+    // this method quickly creates a tree. Optional input for any of nodesAmount, maxVal and minVal is accepted
+    // if it will not find input, it will perform on default values
     private Tree createRandomTree() throws NumberFormatException {
 
         Tree randTree;
-        if (AvlRadioBtn.isSelected()){
-            randTree = new AVLTree();
-        }
-        else if (BstRadioBtn.isSelected()) {
-            randTree = new BinarySearchTree();
-        }
-        else {
-            randTree = new RedBlackTree();
-        }
+        randTree = getTreeType();
 
+        // 1. Default values
         int nodesMinAmountDefault = 5;
         int nodesMaxAmountDefault = 20 + nodesMinAmountDefault;
         int nodesAmount = (int) (Math.random() * nodesMaxAmountDefault + nodesMinAmountDefault);
+
+
+        // 2. Get nodes amount input if any
         if (!nodesAmountTextField.getText().isEmpty())
         {
             String nodesAmountStr = nodesAmountTextField.getText();
@@ -468,6 +462,7 @@ public class TreeViewController {
 
 
         int maxValue = 50;
+        // 3. Get nodes max value input if any
         if (!maxValueTextField.getText().isEmpty())
         {
             String nodesAmountStr = maxValueTextField.getText();
@@ -481,6 +476,7 @@ public class TreeViewController {
         }
 
         int minValue = -50;
+        // 4. Get nodes min value input if any
         if (!minValueTextField.getText().isEmpty())
         {
             String nodesAmountStr = minValueTextField.getText();
@@ -493,13 +489,31 @@ public class TreeViewController {
             }
         }
 
-        // 2. Limit: Nodes Values
+        // 5. Adding nodes
+        randTree = addRandomNodes(randTree, nodesAmount, maxValue, minValue);
+        return randTree;
+    }
+
+    private Tree addRandomNodes(Tree randTree, int nodesAmount, int maxValue, int minValue) {
         for (int i = 0; i < nodesAmount; i++) {
             // from -50 to 50
             int randNodeVal = (int) (Math.random() * ((maxValue - minValue) + 1)) + minValue;
             randTree.addNode(randNodeVal, true);
         }
+        return randTree;
+    }
 
+    private Tree getTreeType() {
+        Tree randTree;
+        if (AvlRadioBtn.isSelected()){
+            randTree = new AVLTree();
+        }
+        else if (BstRadioBtn.isSelected()) {
+            randTree = new BinarySearchTree();
+        }
+        else {
+            randTree = new RedBlackTree();
+        }
         return randTree;
     }
 
@@ -528,40 +542,34 @@ public class TreeViewController {
     private void highlightTreeParts(String diagram) {
         textArea.setText(diagram);
 
+        // Highlighting Red Black Tree
         if (transitionNameLabel.getText().toLowerCase().equals("repainting")){
-            Boolean[] blackNodes = Transitions.getBlackNodes();
-            ArrayList<String> blackStringList = getTextToColour(diagram, blackNodes);
-            for (String s : blackStringList) {
-                highlight(textArea, s, highlightBlack);
-            }
-
-            Boolean[] redNodes = Transitions.getRedNodes();
-            ArrayList<String> redStringList = getTextToColour(diagram, redNodes);
-            for (String s : redStringList) {
-                highlight(textArea, s, highlightRed);
-            }
+            final Boolean[] blackNodes = Transitions.getBlackNodes();
+            final Boolean[] redNodes = Transitions.getRedNodes();
+            highlightList(diagram, blackNodes, highlighterBlack);
+            highlightList(diagram, redNodes, highlighterRed);
         }
 
+        // Highlighting other trees
         else if (!diagram.equals(("(Empty tree)").toLowerCase())) {
-            Boolean[] stackedNodes = Transitions.getStackedNodes();
-            ArrayList<String> stackedStringList = getTextToColour(diagram, stackedNodes);
-            for (String s : stackedStringList) {
-                highlight(textArea, s, highlightStacked);
-            }
+            final Boolean[] stackedNodes = Transitions.getStackedNodes();
+            final Boolean[] markedNodes = Transitions.getMarkedNodes();
+            highlightList(diagram, stackedNodes, highlighterStacked);
+            highlightList(diagram, markedNodes, highlighterMarked);
+        }
+    }
 
-            Boolean[] markedNodes = Transitions.getMarkedNodes();
-            ArrayList<String> markedStringList = getTextToColour(diagram, markedNodes);
-            for (String s : markedStringList) {
-                highlight(textArea, s, highlightMarked);
-            }
+    private void highlightList(String diagram, Boolean[] blackNodes2, Highlighter.HighlightPainter highlightBlack) {
+        Boolean[] blackNodes = blackNodes2;
+        ArrayList<String> blackStringList = getTextToColour(diagram, blackNodes);
+        for (String s : blackStringList) {
+            highlight(textArea, s, highlightBlack);
         }
     }
 
 
     private ArrayList<String> getTextToColour(String diagram, Boolean[] colourBoolArr){
         ArrayList <String> colorfulText = new ArrayList<>();
-
-    //    assert (diagram.length()-1 == colourBoolArr.length);
 
         char[] diagramChars = diagram.toCharArray();
 

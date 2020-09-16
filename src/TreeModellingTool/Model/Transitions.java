@@ -14,7 +14,6 @@ public class Transitions {
     private static int lastVisited = 0;
 
     public static void add(String s, String name){
-
         if (transitions.isEmpty()){
             initFirstEmptyTransition();
         }
@@ -29,15 +28,20 @@ public class Transitions {
 
     private static void initFirstEmptyTransition() {
         transitions.add("(Empty tree)");
-        Boolean[] emptyBoolArr = new Boolean[transitions.get(0).length()];
-        for (int i = 0; i < transitions.get(0).length(); i++) {
-            emptyBoolArr[i] = Boolean.FALSE;
-        }
+        Boolean[] emptyBoolArr = createEmptyBoolArr();
         stackedNodes.add(emptyBoolArr);
         markedNodes.add(emptyBoolArr);
         blackNodes.add(emptyBoolArr);
         redNodes.add(emptyBoolArr);
         transitionNames.add("");
+    }
+
+    private static Boolean[] createEmptyBoolArr() {
+        Boolean[] emptyBoolArr = new Boolean[transitions.get(0).length()];
+        for (int i = 0; i < transitions.get(0).length(); i++) {
+            emptyBoolArr[i] = Boolean.FALSE;
+        }
+        return emptyBoolArr;
     }
 
 
@@ -53,9 +57,18 @@ public class Transitions {
 
         boolean doMarked = false;
         boolean doStacked = false;
-    //    boolean blackNode = false;
-    //    boolean redNode = false;
 
+        fillBooleanColorArrays(diagramChars, marked, stacked, black, red, doMarked, doStacked);
+
+        stackedNodes.add(stacked);
+        markedNodes.add(marked);
+        blackNodes.add(black);
+        redNodes.add(red);
+
+    }
+
+    private static void fillBooleanColorArrays(char[] diagramChars, Boolean[] marked, Boolean[] stacked,
+                                               Boolean[] black, Boolean[] red, boolean doMarked, boolean doStacked) {
         for (int i = 0; i < diagramChars.length; i++) {
             marked[i] = Boolean.FALSE;
             stacked[i] = Boolean.FALSE;
@@ -83,18 +96,12 @@ public class Transitions {
                     i = i + stackedIndexB;
 
                     // stacked or marked closes
-                    if(doMarked){
-                        marked[i] = true;
-                    }
-                    if(doStacked){
-                        stacked[i] = true;
-                    }
+                    continueMarking(marked, stacked, doMarked, doStacked, i);
                     doMarked = false;
                     doStacked = false;
 
                     break;
                 case 'R': // red node
-                    red[i] = true;
                     int stackedIndexR = 0;
                     // backtrack till opening "[" and paint it black
                     while(diagramChars[i] != '[' && diagramChars[i] != '$' && diagramChars[i] != '%'){
@@ -106,41 +113,29 @@ public class Transitions {
                     i = i + stackedIndexR;
 
                     // stacked or marked closes
-                    if(doMarked){
-                        marked[i] = true;
-                    }
-                    if(doStacked){
-                        stacked[i] = true;
-                    }
+                    continueMarking(marked, stacked, doMarked, doStacked, i);
                     doMarked = false;
                     doStacked = false;
 
                     break;
                 case ']': // stacked or marked closes
-                    if(doMarked){
-                        marked[i] = true;
-                    }
-                    if(doStacked){
-                        stacked[i] = true;
-                    }
+                    continueMarking(marked, stacked, doMarked, doStacked, i);
                     doMarked = false;
                     doStacked = false;
                     break;
                 default:
-                    if(doMarked){
-                        marked[i] = true;
-                    }
-                    if(doStacked){
-                        stacked[i] = true;
-                    }
+                    continueMarking(marked, stacked, doMarked, doStacked, i);
             }
         }
-        stackedNodes.add(stacked);
-        markedNodes.add(marked);
-        blackNodes.add(black);
-        redNodes.add(red);
+    }
 
-
+    private static void continueMarking(Boolean[] marked, Boolean[] stacked, boolean doMarked, boolean doStacked, int i) {
+        if (doMarked) {
+            marked[i] = true;
+        }
+        if (doStacked) {
+            stacked[i] = true;
+        }
     }
 
     public static Boolean[] getStackedNodes(int transitionIndex){
@@ -176,7 +171,6 @@ public class Transitions {
         redNodes = new LinkedList<>();
         blackNodes = new LinkedList<>();
         lastVisited = 0;
-
     }
 
     public static List<String> getTransitions(){
@@ -193,7 +187,6 @@ public class Transitions {
     }
 
     public static String getPrevTransition(){
-       // if (lastVisited > 0) {
         if (lastVisited > 0 && !transitions.isEmpty()){
             lastVisited--;
             return transitions.get(lastVisited);
