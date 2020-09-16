@@ -606,25 +606,53 @@ public abstract class AbstractBST implements Tree {
 
             String result = "";
 
-            //todo add protections agains using Integer.MinValue as node from GUI
+            //todo add protections against using Integer.MinValue as node from GUI
             String value = String.valueOf(n.getValue());
 
-            if (value == String.valueOf(Integer.MIN_VALUE)){
+
+            if (value.equals(String.valueOf(Integer.MIN_VALUE))){
                 value = "nil";
             }
 
+
+
             int totalCount = maxWordLength[depth] - ("" + value).length();
+
             int leftCount = totalCount / 2;
             int rightCount = totalCount - leftCount;
 
             String leftPadding = repeat(" ", leftCount);
             String rightPadding = repeat(" ", rightCount);
 
-            if (n.isMarked()) {
-                return "%" + leftPadding + value + rightPadding + "]";
-            } else if (n.isStacked()) {
-                return "$" + leftPadding + value + rightPadding + "]";
-            } else return "[" + leftPadding + value + rightPadding + "]";
+            if (n instanceof RedBlackNode) {
+                if (((RedBlackNode) n).getColor() == 1 && n.isMarked()) {
+                    return "%" + leftPadding + value + rightPadding + "R";
+                }
+                else if (((RedBlackNode) n).getColor() == 1 && n.isStacked()) {
+                    return "$" + leftPadding + value + rightPadding + "R";
+                }
+                else if (((RedBlackNode) n).getColor() == 1) {
+                    return "[" + leftPadding + value + rightPadding + "R";
+                }
+
+                if (((RedBlackNode) n).getColor() == 0 && n.isMarked()) {
+                    return "%" + leftPadding + value + rightPadding + "B";
+                }
+                else if (((RedBlackNode) n).getColor() == 0 && n.isStacked()) {
+                    return "$" + leftPadding + value + rightPadding + "B";
+                }
+                else { //if (((RedBlackNode) n).getColor() == 0) {
+                    return "[" + leftPadding + value + rightPadding + "B";
+                }
+
+            } else {
+                if (n.isMarked()) {
+                    return "%" + leftPadding + value + rightPadding + "]";
+                } else if (n.isStacked()) {
+                    return "$" + leftPadding + value + rightPadding + "]";
+                } else return "[" + leftPadding + value + rightPadding + "]";
+            }
+
         }
 
         protected String repeat(String s, int count) {

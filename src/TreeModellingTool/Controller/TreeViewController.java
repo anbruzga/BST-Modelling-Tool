@@ -52,9 +52,11 @@ public class TreeViewController {
 
     private final Highlighter.HighlightPainter highlightStacked = new MyHighlightPainter(Color.yellow);
     private final Highlighter.HighlightPainter highlightMarked = new MyHighlightPainter(Color.orange);
+    private final Highlighter.HighlightPainter highlightRed = new MyHighlightPainter(Color.red);
+    private final Highlighter.HighlightPainter highlightBlack = new MyHighlightPainter(Color.gray);
 
     public TreeViewController() {
-        JFrame frame = new JFrame("Binary Search Trees Modelling Tool");
+        JFrame frame = new JFrame("Tree Data Structures Modelling Tool");
         frame.setContentPane(panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         makeFrameFullSize(frame);
@@ -77,77 +79,69 @@ public class TreeViewController {
             catch(NumberFormatException ex){
                 displayNumberFormatException();
             }
-            updateDiagram();
-            updateTransitionName();
+            UpdateTransitionAndDiagram();
         });
 
         balanceTreeBtn.addActionListener(e -> {
             Transitions.visitLast();
             tree.balanceTree();
-            updateDiagram();
-            updateTransitionName();
+            UpdateTransitionAndDiagram();
+
         });
 
         inorderBtn.addActionListener(e -> {
             Transitions.visitLast();
             tree.getInOrder();
-            updateDiagram();
-            updateTransitionName();
+            UpdateTransitionAndDiagram();
         });
 
         preOrderBtn.addActionListener(e -> {
             Transitions.visitLast();
             tree.getPreOrder(true);
-            updateDiagram();
-            updateTransitionName();
+            UpdateTransitionAndDiagram();
         });
 
         postOrderBtn.addActionListener(e -> {
             Transitions.visitLast();
             tree.getPostOrder();
-            updateDiagram();
-            updateTransitionName();
+            UpdateTransitionAndDiagram();
         });
 
         minNodeBtn.addActionListener(e -> {
             Transitions.visitLast();
             tree.showMinNode();
-            updateDiagram();
-            updateTransitionName();
+            UpdateTransitionAndDiagram();
         });
 
         maxNodeBtn.addActionListener(e -> {
             Transitions.visitLast();
             tree.showMaxNode();
-            updateDiagram();
-            updateTransitionName();
+            UpdateTransitionAndDiagram();
         });
 
         addNodeBtn.addActionListener(e -> {
             Transitions.visitLast();
             getNodeToAdd();
-            updateDiagram();
-            updateTransitionName();
+            UpdateTransitionAndDiagram();
         });
 
         findNodeBtn.addActionListener(e -> {
             Transitions.visitLast();
             getNodeToFind();
-            updateDiagram();
-            updateTransitionName();
+            UpdateTransitionAndDiagram();
         });
 
         delNodeBtn.addActionListener(e -> {
             Transitions.visitLast();
-            getNodeToDelete();
             updateTransitionName();
+            getNodeToDelete();
         });
 
         deleteAllNodesButton.addActionListener(e -> {
             Transitions.clear();
-            tree.clear();
-            textArea.setText("(Empty tree)");
+            tree = createNewTree();
             updateTransitionName();
+            textArea.setText("(Empty tree)");
         });
 
         fontLargerBtn.addActionListener(e -> {
@@ -162,19 +156,19 @@ public class TreeViewController {
 
         prevTransitionBtn.addActionListener(e -> {
             String diagram = Transitions.getPrevTransition();
+            updateTransitionName();
             if (diagram != null) {
                 updateDiagram(diagram);
             }
-            updateTransitionName();
 
         });
 
         nextTransitionBtn.addActionListener(e -> {
             String diagram = Transitions.getNextTransition();
+            updateTransitionName();
             if (diagram != null) {
                 updateDiagram(diagram);
             }
-            updateTransitionName();
         });
 
         transitionFastForwardBtn.addActionListener(e -> {
@@ -182,6 +176,10 @@ public class TreeViewController {
            String diagram = "";
            for (int i = 0; i < fastForwardMultiplier; i++) {
                diagram = Transitions.getNextTransition();
+               if (null == diagram){
+                   diagram = Transitions.getLastTransition();
+                   break;
+               }
            }
            updateTransitionName();
            updateDiagram(diagram);
@@ -193,15 +191,15 @@ public class TreeViewController {
             for (int i = 0; i < fastBackwardMultiplier; i++) {
                 diagram = Transitions.getPrevTransition();
             }
-            updateDiagram(diagram);
             updateTransitionName();
+            updateDiagram(diagram);
         });
 
         // Checkboxes:
         AvlRadioBtn.addActionListener(e -> {
             if (!(tree instanceof AVLTree)) { // not to start a new tree if is already selected
                 // if the tree is note empty
-                if ( !tree.getInOrder().isEmpty()) {
+                if ( !(tree.getRoot() == null)) {
                     //Inform user that he is about to lose previous tree data
                     boolean agreesToChange = changingNonEmptyTreeTypeMsg();
                     if (agreesToChange) {
@@ -219,7 +217,7 @@ public class TreeViewController {
             // identifier is used because the other trees are children
             if (!(tree.getIdentifier().equals("BST"))) {
                 // if the tree is note empty
-                if ( !tree.getInOrder().isEmpty()) {
+                if (!(tree.getRoot() == null)) {
                     //Inform user that he is about to lose previous tree data
                     boolean agreesToChange = changingNonEmptyTreeTypeMsg();
                     if (agreesToChange) {
@@ -236,7 +234,7 @@ public class TreeViewController {
         RedBlackRadioBtn.addActionListener(e -> {
             if (!(tree instanceof RedBlackTree)) {
                 // if the tree is note empty
-                if ( !tree.getInOrder().isEmpty()) {
+                if (!(tree.getRoot() == null)) {
                     //Inform user that he is about to lose previous tree data
                     boolean agreesToChange = changingNonEmptyTreeTypeMsg();
                     if (agreesToChange) {
@@ -251,15 +249,38 @@ public class TreeViewController {
         });
     }
 
+    private void UpdateTransitionAndDiagram() {
+        // order is important for painting, as in Red Black tree it will check whether to show the algorithm
+        // or red-blackness of the tree depending on the transition name
+        updateTransitionName();
+        updateDiagram();
+    }
+
+    private Tree createNewTree(){
+        switch (tree.getIdentifier()) {
+            case "BST":
+                tree = new BinarySearchTree();
+                break;
+            case "AVL":
+                tree = new AVLTree();
+                break;
+            case "RBT":
+                tree = new RedBlackTree();
+                break;
+        }
+        return tree;
+    }
     private void reselectPreviousRadioButton() {
-        if (tree.getIdentifier().equals("BST")){
-            BstRadioBtn.setSelected(true);
-        }
-        else if (tree.getIdentifier().equals("AVL")){
-            BstRadioBtn.setSelected(true);
-        }
-        else if (tree.getIdentifier().equals("RBT")){
-            BstRadioBtn.setSelected(true);
+        switch (tree.getIdentifier()) {
+            case "BST":
+                BstRadioBtn.setSelected(true);
+                break;
+            case "AVL":
+                AvlRadioBtn.setSelected(true);
+                break;
+            case "RBT":
+                RedBlackRadioBtn.setSelected(true);
+                break;
         }
     }
 
@@ -478,26 +499,22 @@ public class TreeViewController {
     }
 
 
-    private void updateDiagram(){
+    private void updateDiagram() {
         Transitions.visitLast();
         String diagram = Transitions.getLastTransition();
-        if (null == diagram){
-            textArea.setText("(Empty tree)");
-        }
-        diagram = diagram.replaceAll("%", "[")
-                .replaceAll("\\$","[");
-
-
-        highlightTreeParts(diagram);
-
+        updateDiagram(diagram);
     }
 
     private void updateDiagram(String diagram){
         if (null == diagram){
             textArea.setText("(Empty tree)");
         }
+
         diagram = diagram.replaceAll("%", "[")
-                .replaceAll("\\$","[");
+                .replaceAll("\\$","[")
+                .replaceAll("R", "]")
+                .replaceAll("B", "]");
+
 
         highlightTreeParts(diagram);
     }
@@ -505,8 +522,21 @@ public class TreeViewController {
     private void highlightTreeParts(String diagram) {
         textArea.setText(diagram);
 
-        if (!diagram.equals(("(Empty tree)").toLowerCase())) {
+        if (transitionNameLabel.getText().toLowerCase().equals("repainting")){
+            Boolean[] blackNodes = Transitions.getBlackNodes();
+            ArrayList<String> blackStringList = getTextToColour(diagram, blackNodes);
+            for (String s : blackStringList) {
+                highlight(textArea, s, highlightBlack);
+            }
 
+            Boolean[] redNodes = Transitions.getRedNodes();
+            ArrayList<String> redStringList = getTextToColour(diagram, redNodes);
+            for (String s : redStringList) {
+                highlight(textArea, s, highlightRed);
+            }
+        }
+
+        else if (!diagram.equals(("(Empty tree)").toLowerCase())) {
             Boolean[] stackedNodes = Transitions.getStackedNodes();
             ArrayList<String> stackedStringList = getTextToColour(diagram, stackedNodes);
             for (String s : stackedStringList) {

@@ -35,7 +35,7 @@ public class RedBlackNode implements Node {
        setValue((Integer) value);
     }
 
-    public void setValue(Integer value) {
+    private void setValue(Integer value) {
         if (value == Integer.MIN_VALUE) {
             this.value = null;
         }

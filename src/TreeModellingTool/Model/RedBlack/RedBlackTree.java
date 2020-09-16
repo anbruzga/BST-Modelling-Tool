@@ -32,13 +32,14 @@ public class RedBlackTree extends BinarySearchTree implements Tree {
     @Override
     public void addNode(int value, boolean doTransitions){
         if (!contains(root, value)) {
-            insert(value);
+            insert(value, doTransitions);
           //  root = addRecursive(root, value, doTransitions);
             super.root = this.root;
             if (doTransitions) {
-                addTransition(ADDING);
+                addTransition("BALANCING");
                 traverseAll(root, true, true);
             }
+            addTransition("REPAINTING");
         }
     }
 
@@ -51,7 +52,7 @@ public class RedBlackTree extends BinarySearchTree implements Tree {
 
             addTransition(DELETING);
             traverseAll(root, true, true);
-
+            addTransition("REPAINTING");
             return true;
         }
 
@@ -429,7 +430,9 @@ public class RedBlackTree extends BinarySearchTree implements Tree {
 
     // insert the key to the tree in its appropriate position
     // and fix the tree
-    public void insert(int key) {
+    public void insert(int key, boolean doTransitions) {
+
+
         // Ordinary Binary Search Insertion
         RedBlackNode node = new RedBlackNode();
         node.setParent(null);
@@ -442,6 +445,10 @@ public class RedBlackTree extends BinarySearchTree implements Tree {
         RedBlackNode x = this.root;
 
         while (x != TNULL) {
+            if (doTransitions){
+                x.setStacked(true);
+                addTransition(ADDING);
+            }
             y = x;
             if (node.getValue() < x.getValue()) {
                 x = x.getLeft();
@@ -454,10 +461,22 @@ public class RedBlackTree extends BinarySearchTree implements Tree {
         node.setParent(y);
         if (y == null) {
             root = node;
+            if (doTransitions){
+                node.setMarked(true);
+                addTransition(ADDING);
+            }
         } else if (node.getValue() < y.getValue()) {
             y.setLeft(node);
+            if (doTransitions){
+                node.setMarked(true);
+                addTransition(ADDING);
+            }
         } else {
             y.setRight(node);
+            if (doTransitions){
+                node.setMarked(true);
+                addTransition(ADDING);
+            }
         }
 
         // if new RedBlackNode is a root node, simply return
