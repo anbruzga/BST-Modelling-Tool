@@ -4,11 +4,10 @@ Create and modify, tree data structures, visualise the changes step by step
 ## Currently, in progress:
 1. AVL tree balancing step by step
 2. Red black tree balancing step by step
-3  Min heaps
-4. Max heaps
-5. Binary Tree data structure
-6. Feature to add one tree's nodes into a new selected tree
-5. Automatic preorder/inorder/postorder selectable hint for any tree on display. 
+3. Min/Max heap
+4. Binary Tree data structure
+5. Feature to add one tree's nodes into a new selected tree
+6. Automatic preorder/inorder/postorder selectable hint for any tree on display. 
 
 
 ## Installation:
