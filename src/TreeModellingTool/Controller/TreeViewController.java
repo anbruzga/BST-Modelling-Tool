@@ -349,7 +349,7 @@ public class TreeViewController {
     }
 
     private void displayNumberFormatException() {
-        String msg = "The number must be between -2147483648 to 2147483647";
+        String msg = "The number must be between -2147483647 to 2147483647";
         JOptionPane.showMessageDialog(null,msg);
     }
 
@@ -375,6 +375,11 @@ public class TreeViewController {
     private boolean addNode(String value) {
         try {
             int intVal = Integer.parseInt(value);
+
+            // Min value has a special meaning in RB trees as Null
+            if (intVal == Integer.MIN_VALUE){
+                return false;
+            }
             tree.addNode(intVal, true);
             return true;
         }
@@ -508,6 +513,7 @@ public class TreeViewController {
     private void updateDiagram(String diagram){
         if (null == diagram){
             textArea.setText("(Empty tree)");
+            return;
         }
 
         diagram = diagram.replaceAll("%", "[")
@@ -603,7 +609,7 @@ public class TreeViewController {
     private void createUIComponents() {
         maxValueTextField = new HintTextField("default: 50");
         minValueTextField = new HintTextField("default: -50");
-        nodesAmountTextField = new HintTextField("default: random from [5, 25]");
+        nodesAmountTextField = new HintTextField("default: random in range [5, 25]");
     }
 
 
