@@ -158,4 +158,38 @@ public class BinarySearchTree extends AbstractBST implements Tree {
         return identifier;
     }
 
+    // Return true/false depending on whether a value exists in the tree.
+    protected boolean contains(int value) {
+        return contains(root, value);
+    }
+
+    // Recursive contains helper method.
+    protected boolean contains(Node node, int value) {
+
+        if (node == null) return false;
+
+        // Compare current value to the value in the node.
+        int cmp = compareTo(value, node.getValue());
+
+        // Dig into left subtree.
+        if (cmp < 0) return contains(node.getLeft(), value);
+
+        // Dig into right subtree.
+        if (cmp > 0) return contains(node.getRight(), value);
+
+        // Found value in tree.
+        return true;
+
+    }
+
+    protected int compareTo(int value1, int value2){
+        if (value1 > value2){
+            return 1;
+        }
+        else if(value1 < value2){
+            return -1;
+        }
+        else return 0;
+    }
+
 }

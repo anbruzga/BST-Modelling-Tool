@@ -7,7 +7,6 @@ import TreeModellingTool.Model.RedBlack.RedBlackTree;
 import TreeModellingTool.Model.Transitions;
 import TreeModellingTool.Model.Tree;
 import TreeModellingTool.View.HintTextField;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.swing.*;
 import javax.swing.text.DefaultHighlighter;
@@ -16,7 +15,6 @@ import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class TreeViewController {
     private JPanel panel1;
@@ -180,11 +178,23 @@ public class TreeViewController {
         });
 
         transitionFastForwardBtn.addActionListener(e -> {
-            throw new NotImplementedException();
+           final int fastForwardMultiplier = 5;
+           String diagram = "";
+           for (int i = 0; i < fastForwardMultiplier; i++) {
+               diagram = Transitions.getNextTransition();
+           }
+           updateTransitionName();
+           updateDiagram(diagram);
         });
 
         transitionFastBackwardBtn.addActionListener(e -> {
-            throw new NotImplementedException();
+            final int fastBackwardMultiplier = 5;
+            String diagram = "";
+            for (int i = 0; i < fastBackwardMultiplier; i++) {
+                diagram = Transitions.getPrevTransition();
+            }
+            updateDiagram(diagram);
+            updateTransitionName();
         });
 
         // Checkboxes:
@@ -471,15 +481,24 @@ public class TreeViewController {
     private void updateDiagram(){
         Transitions.visitLast();
         String diagram = Transitions.getLastTransition();
+        if (null == diagram){
+            textArea.setText("(Empty tree)");
+        }
         diagram = diagram.replaceAll("%", "[")
                 .replaceAll("\\$","[");
+
+
         highlightTreeParts(diagram);
 
     }
 
     private void updateDiagram(String diagram){
+        if (null == diagram){
+            textArea.setText("(Empty tree)");
+        }
         diagram = diagram.replaceAll("%", "[")
                 .replaceAll("\\$","[");
+
         highlightTreeParts(diagram);
     }
 

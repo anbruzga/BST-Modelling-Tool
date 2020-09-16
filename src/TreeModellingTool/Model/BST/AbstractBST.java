@@ -553,7 +553,7 @@ public abstract class AbstractBST implements Tree {
             StringBuilder result = new StringBuilder();
             for (char[] aChar : chars) {
                 for (int j = 0; j < chars[0].length; j++) {
-                    result.append(String.valueOf(aChar[j]));
+                    result.append(aChar[j]);
                 }
                 result.append("\n");
             }
@@ -587,7 +587,14 @@ public abstract class AbstractBST implements Tree {
 
         protected void computeMaxWordLength(Node n, int depth) {
             if (n == null) return;
-            int nodeStringLength = ("" + n.getValue()).length();
+
+            String value = String.valueOf(n.getValue());
+
+            if (value == String.valueOf(Integer.MIN_VALUE)){
+                value = "nil";
+            }
+
+            int nodeStringLength = ("" + value).length();
             if (nodeStringLength > maxWordLength[depth]) {
                 maxWordLength[depth] = nodeStringLength;
             }
@@ -598,8 +605,15 @@ public abstract class AbstractBST implements Tree {
         protected String valueString(Node n, int depth) {
 
             String result = "";
-            int totalCount = maxWordLength[depth] - ("" + n.getValue()).length();
 
+            //todo add protections agains using Integer.MinValue as node from GUI
+            String value = String.valueOf(n.getValue());
+
+            if (value == String.valueOf(Integer.MIN_VALUE)){
+                value = "nil";
+            }
+
+            int totalCount = maxWordLength[depth] - ("" + value).length();
             int leftCount = totalCount / 2;
             int rightCount = totalCount - leftCount;
 
@@ -607,10 +621,10 @@ public abstract class AbstractBST implements Tree {
             String rightPadding = repeat(" ", rightCount);
 
             if (n.isMarked()) {
-                return "%" + leftPadding + String.valueOf(n.getValue()) + rightPadding + "]";
+                return "%" + leftPadding + value + rightPadding + "]";
             } else if (n.isStacked()) {
-                return "$" + leftPadding + String.valueOf(n.getValue()) + rightPadding + "]";
-            } else return "[" + leftPadding + String.valueOf(n.getValue()) + rightPadding + "]";
+                return "$" + leftPadding + value + rightPadding + "]";
+            } else return "[" + leftPadding + value + rightPadding + "]";
         }
 
         protected String repeat(String s, int count) {
